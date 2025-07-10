@@ -24,7 +24,7 @@ describe('External Constants', () => {
     });
 
     test('should use external constants in expressions', () => {
-      const ast = parse('%resource.id = "123"');
+      const ast = parse("%resource.id = '123'");
       expect(ast.kind).toBe('binary');
       expect((ast as any).op).toBe(TokenType.EQUALS);
       expect((ast as any).left.kind).toBe('dot');

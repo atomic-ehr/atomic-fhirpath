@@ -99,7 +99,7 @@ describe('Missing Features from ANTLR Grammar', () => {
     });
 
     test('should use $total in function calls', () => {
-      const ast = parse('iif($index = $total - 1, "last", "not last")');
+      const ast = parse("iif($index = $total - 1, 'last', 'not last')");
       expect(ast.kind).toBe('function');
       expect((ast as any).name).toBe('iif');
       expect((ast as any).args[0].kind).toBe('binary');
@@ -190,7 +190,7 @@ describe('Missing Features from ANTLR Grammar', () => {
 
 describe('Edge cases for new features', () => {
   test('should handle {} in function arguments', () => {
-    const ast = parse('iif(value = {}, "empty", "not empty")');
+    const ast = parse("iif(value = {}, 'empty', 'not empty')");
     expect(ast.kind).toBe('function');
     expect((ast as any).args[0].kind).toBe('binary');
     expect((ast as any).args[0].right.kind).toBe('null');

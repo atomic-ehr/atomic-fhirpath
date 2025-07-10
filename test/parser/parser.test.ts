@@ -35,15 +35,16 @@ describe('Tokenizer', () => {
     expect(token.type).toBe(TokenType.STRING);
     expect(token.value).toBe('hello world');
     
-    tokenizer.reset('"hello world"');
-    token = tokenizer.nextToken();
-    expect(token.type).toBe(TokenType.STRING);
-    expect(token.value).toBe('hello world');
   });
 
+  test('should throw on double quoted strings', () => {
+    const tokenizer = new Tokenizer();
+    tokenizer.reset('"hello world"');
+    expect(() => tokenizer.nextToken()).toThrow(ParseError);
+  })
   test('should tokenize operators', () => {
     const tokenizer = new Tokenizer();
-    const operators = [
+    const operators: [string, TokenType][] = [
       ['+', TokenType.PLUS],
       ['-', TokenType.MINUS],
       ['*', TokenType.MULTIPLY],
@@ -86,8 +87,6 @@ describe('Tokenizer', () => {
 });
 
 describe('Parser', () => {
-  // Clear cache before each test
-  clearCache();
 
   test('should parse simple identifiers', () => {
     const ast = parse('name');
@@ -213,7 +212,7 @@ describe('Parser', () => {
       // Comparisons
       'age > 18',
       'value < 100 and value > 0',
-      'status = "active" or status = "completed"',
+      'status = \'active\' or status = \'completed\'',
       
       // Functions
       'name.exists()',
@@ -223,8 +222,8 @@ describe('Parser', () => {
       'given.last()',
       
       // Complex expressions
-      'Patient.name.given[0] + " " + Patient.name.family',
-      'active and (gender = "male" or gender = "female")',
+      'Patient.name.given[0] + \' \' + Patient.name.family',
+      'active and (gender = \'male\' or gender = \'female\')',
       
       // Union operator
       'name | contact.name',
@@ -292,7 +291,7 @@ describe('AST Visitor', () => {
 
 describe('AST Printer', () => {
   test('should print AST', () => {
-    const ast = parse('Patient.name.where(use = "official").given');
+    const ast = parse("Patient.name.where(use = 'official').given");
     printAST(ast);
   });
 });
@@ -317,7 +316,7 @@ describe('Performance', () => {
     const expr = 'Patient.name.given';
     
     // Clear cache first
-    clearCache();
+    // clearCache(); // Note: clearCache requires EvaluationContext, not needed for parser tests
     
     // First parse (cold)
     const ast1 = parse(expr);

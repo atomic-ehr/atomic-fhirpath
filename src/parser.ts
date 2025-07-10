@@ -266,8 +266,8 @@ export class Parser {
 
   constructor() {
     this.tokenizer = new Tokenizer();
-    this.current = { type: TokenType.EOF, value: "", start: 0, end: 0 };
-    this.previous = { type: TokenType.EOF, value: "", start: 0, end: 0 };
+    this.current = { type: TokenType.EOF, value: "", start: 0, end: 0, line: 1, column: 1 };
+    this.previous = { type: TokenType.EOF, value: "", start: 0, end: 0, line: 1, column: 1 };
 
     // Initialize prefix parser dispatch table
     this.prefixParsers = new Map([

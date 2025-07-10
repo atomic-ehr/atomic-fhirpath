@@ -20,13 +20,14 @@ export function createContext(options?: {
   // If cacheSize is specified, implement LRU eviction
   if (options?.cacheSize) {
     const maxSize = options.cacheSize;
-    const originalSet = ctx._cache.set.bind(ctx._cache);
+    const cache = ctx._cache!;
+    const originalSet = cache.set.bind(cache);
     
-    ctx._cache.set = function(key: string, value: CompiledNode) {
+    cache.set = function(key: string, value: CompiledNode) {
       // Remove oldest entry if at capacity
       if (this.size >= maxSize && !this.has(key)) {
         const firstKey = this.keys().next().value;
-        this.delete(firstKey);
+        this.delete(firstKey!);
       }
       
       // If key exists, delete and re-add to move to end
@@ -47,7 +48,7 @@ export function createContext(options?: {
  * @param ctx - The evaluation context
  */
 export function clearCache(ctx: EvaluationContext): void {
-  ctx._cache?.clear();
+  ctx?._cache?.clear();
 }
 
 /**

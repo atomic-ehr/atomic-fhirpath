@@ -703,7 +703,7 @@ export class Tokenizer {
                 );
               }
 
-              codePoint = (codePoint << 4) | hexValue;
+              codePoint = (codePoint << 4) | hexValue!;
               this.advance();
             }
             chars[charCount++] = codePoint;
@@ -1434,7 +1434,7 @@ export class Tokenizer {
                 );
               }
 
-              codePoint = (codePoint << 4) | hexValue;
+              codePoint = (codePoint << 4) | hexValue!;
               this.advance();
             }
             chars[charCount++] = codePoint;

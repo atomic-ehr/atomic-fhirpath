@@ -24,7 +24,7 @@ describe('Performance Benchmarks', () => {
   });
 
   test('Parser performance - complex path expression', () => {
-    const expression = 'Patient.name.given[0] + " " + Patient.name.family';
+    const expression = "Patient.name.given[0] + ' ' + Patient.name.family";
     const { cached, nonCached } = measureParsePerformanceComparison(expression, expression, 3000);
     
     results.push(nonCached, cached);
@@ -45,7 +45,7 @@ describe('Performance Benchmarks', () => {
   });
 
   test('Parser performance - function calls', () => {
-    const expression = 'exists() and contains(value, "test")';
+    const expression = "exists() and contains(value, 'test')";
     const { cached, nonCached } = measureParsePerformanceComparison(expression, expression, 3000);
     
     results.push(nonCached, cached);
@@ -54,7 +54,7 @@ describe('Performance Benchmarks', () => {
   });
 
   test('Parser performance - mixed operations', () => {
-    const expression = 'Patient.name.given.first() + " " + Patient.name.family';
+    const expression = "Patient.name.given.first() + ' ' + Patient.name.family";
     const { cached, nonCached } = measureParsePerformanceComparison(expression, expression, 2000);
     
     results.push(nonCached, cached);
@@ -63,7 +63,7 @@ describe('Performance Benchmarks', () => {
   });
 
   test('Performance regression detection', () => {
-    const expression = 'Bundle.entry.resource.where(resourceType="Patient").name.given';
+    const expression = "Bundle.entry.resource.where(resourceType='Patient').name.given";
     const { cached, nonCached } = measureParsePerformanceComparison(expression, expression, 1000);
     
     results.push(nonCached, cached);

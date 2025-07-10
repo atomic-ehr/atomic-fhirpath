@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { parse, clearParserCache } from '../../src';
+import { parse, clearParserCache, clearCache, createContext } from '../../src';
 
 // Performance log file
 const PERF_LOG_FILE = path.join(__dirname, '..', 'performance.log');

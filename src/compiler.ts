@@ -1260,7 +1260,7 @@ export class FHIRPathCompiler {
           ctx: EvaluationContext,
         ): any[] {
           if (compiledArgs.length !== 1) return [];
-          const divisorResult = compiledArgs[0].eval(context, data, ctx);
+          const divisorResult = compiledArgs[0]!.eval(context, data, ctx);
           if (
             divisorResult.length !== 1 ||
             typeof divisorResult[0] !== "number"
@@ -1700,7 +1700,7 @@ function compareTemporalValues(a: string, b: string): number {
     const minParts = Math.min(partsA.length, partsB.length);
 
     for (let i = 0; i < minParts; i++) {
-      const diff = parseInt(partsA[i]) - parseInt(partsB[i]);
+      const diff = parseInt(partsA[i]!) - parseInt(partsB[i]!);
       if (diff !== 0) return diff;
     }
 

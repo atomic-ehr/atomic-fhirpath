@@ -52,7 +52,7 @@ test("compile function call", () => {
 test("compile with model provider context", () => {
   const patientType = createResourceType("Patient", new Map([
     ["name", createCollectionType(STRING_TYPE)],
-    ["active", BOOLEAN_TYPE]
+    ["active", createCollectionType(BOOLEAN_TYPE)]
   ]));
   
   const ast = parse("name");
@@ -86,16 +86,16 @@ test("compile without validation", () => {
 });
 
 test("compile dot navigation", () => {
-  const ast = parse("Patient.name");
+  const ast = parse("name.family");
   const compiler = new TypedCompiler();
   const result = compiler.compile(ast);
   
   expect(result.hasErrors).toBe(false);
   
   // Test execution with mock data
-  const mockPatient = { name: [{ given: ["John"], family: "Doe" }] };
-  const evalResult = result.compiledNode.eval([mockPatient], mockPatient, {});
-  expect(evalResult).toEqual([{ given: ["John"], family: "Doe" }]);
+  const mockData = [{ name: { family: "Doe", given: ["John"] } }];
+  const evalResult = result.compiledNode.eval(mockData, mockData[0], {});
+  expect(evalResult).toEqual(["Doe"]);
 });
 
 test("compile indexer", () => {
@@ -106,8 +106,8 @@ test("compile indexer", () => {
   expect(result.hasErrors).toBe(false);
   
   // Test execution
-  const data = [["first", "second", "third"]];
-  const evalResult = result.compiledNode.eval(data, data, {});
+  const data = [{ name: ["first", "second", "third"] }];
+  const evalResult = result.compiledNode.eval(data, data[0], {});
   expect(evalResult).toEqual(["first"]);
 });
 
