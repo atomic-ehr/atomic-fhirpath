@@ -1,0 +1,3 @@
+[submodule "refs/FHIRPath"]
+	path = refs/FHIRPath
+	url = https://github.com/HL7/FHIRPath.git

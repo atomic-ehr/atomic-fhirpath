@@ -11,6 +11,7 @@ alwaysApply: false
 * Use context7 mcp to get docs about libraries
 * Use bun mcp test tool or `bun test` to run tests
 * Use ./tmp folder for temporal files and scripts
+* Use ./refs/FHIRPath as official FHIRPath specification
 * Use ./docs for project documentation. Use this for any project related documentation.
 * Use ./scripts folder to write typescript scripts and run with bun
 * All tests are in ./test folder
