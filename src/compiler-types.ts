@@ -1,87 +1,97 @@
-import { ASTNode, TokenType } from './types';
+import type { 
+  ASTNode, 
+  TokenType, 
+  LiteralNode,
+  IdentifierNode,
+  BinaryOpNode,
+  UnaryOpNode,
+  FunctionCallNode,
+  IndexerNode,
+  DotNode,
+  AsTypeNode,
+  IsTypeNode,
+  VariableNode,
+  EnvironmentVariableNode,
+  NullLiteralNode,
+} from "./types";
 
 // Evaluation context interface - can be extended later
 export interface EvaluationContext {
   // Cache for compiled expressions
   _cache?: Map<string, CompiledNode>;
-  
+
   // User-defined variables (future extension)
   variables?: Record<string, any>;
-  
+
   // Custom functions (future extension)
   functions?: Record<string, Function>;
-  
+
   // Cache for now() function to ensure consistency within expression
   _nowCache?: string;
-  
+
   // Cache for today() function to ensure consistency within expression
   _todayCache?: string;
-  
+
   // Cache for timeOfDay() function to ensure consistency within expression
   _timeOfDayCache?: string;
 }
 
 // Base evaluation function type
-export type EvalFunction = (context: any[], data: any, ctx: EvaluationContext) => any[];
+export type EvalFunction = (
+  context: any[],
+  data: any,
+  ctx: EvaluationContext,
+) => any[];
 
-// Base compiled node - extends the original AST node with eval function
-export type CompiledNode = ASTNode & { eval: EvalFunction };
-
-// Specific compiled node types with properly typed children
-export interface CompiledLiteralNode extends CompiledNode {
-  kind: 'literal';
-}
-
-export interface CompiledIdentifierNode extends CompiledNode {
-  kind: 'identifier';
-}
-
-export interface CompiledBinaryOpNode extends CompiledNode {
-  kind: 'binary';
+// Specific compiled node types - intersections of original types with eval function
+export type CompiledLiteralNode = LiteralNode & { eval: EvalFunction };
+export type CompiledIdentifierNode = IdentifierNode & { eval: EvalFunction };
+export type CompiledBinaryOpNode = BinaryOpNode & { 
+  eval: EvalFunction;
   left: CompiledNode;
   right: CompiledNode;
-}
-
-export interface CompiledUnaryOpNode extends CompiledNode {
-  kind: 'unary';
+};
+export type CompiledUnaryOpNode = UnaryOpNode & { 
+  eval: EvalFunction;
   operand: CompiledNode;
-}
-
-export interface CompiledFunctionCallNode extends CompiledNode {
-  kind: 'function';
+};
+export type CompiledFunctionCallNode = FunctionCallNode & { 
+  eval: EvalFunction;
   args: CompiledNode[];
-}
-
-export interface CompiledIndexerNode extends CompiledNode {
-  kind: 'indexer';
+};
+export type CompiledIndexerNode = IndexerNode & { 
+  eval: EvalFunction;
   expr: CompiledNode;
   index: CompiledNode;
-}
-
-export interface CompiledDotNode extends CompiledNode {
-  kind: 'dot';
+};
+export type CompiledDotNode = DotNode & { 
+  eval: EvalFunction;
   left: CompiledNode;
   right: CompiledNode;
-}
-
-export interface CompiledAsTypeNode extends CompiledNode {
-  kind: 'as';
+};
+export type CompiledAsTypeNode = AsTypeNode & { 
+  eval: EvalFunction;
   expression: CompiledNode;
-}
-
-export interface CompiledIsTypeNode extends CompiledNode {
-  kind: 'is';
+};
+export type CompiledIsTypeNode = IsTypeNode & { 
+  eval: EvalFunction;
   expression: CompiledNode;
-}
+};
+export type CompiledVariableNode = VariableNode & { eval: EvalFunction };
+export type CompiledEnvironmentVariableNode = EnvironmentVariableNode & { eval: EvalFunction };
+export type CompiledNullLiteralNode = NullLiteralNode & { eval: EvalFunction };
 
-export interface CompiledVariableNode extends CompiledNode {
-  kind: 'variable';
-}
-
-export interface CompiledEnvironmentVariableNode extends CompiledNode {
-  kind: 'envVariable';
-}
-
-export interface CompiledNullLiteralNode extends CompiledNode {
-  kind: 'null';
-}
+// Base compiled node - union of all compiled node types
+export type CompiledNode = 
+  | CompiledLiteralNode
+  | CompiledIdentifierNode
+  | CompiledBinaryOpNode
+  | CompiledUnaryOpNode
+  | CompiledFunctionCallNode
+  | CompiledIndexerNode
+  | CompiledDotNode
+  | CompiledAsTypeNode
+  | CompiledIsTypeNode
+  | CompiledVariableNode
+  | CompiledEnvironmentVariableNode
+  | CompiledNullLiteralNode;

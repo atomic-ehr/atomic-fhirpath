@@ -152,7 +152,7 @@ export type ASTNode =
 
 export interface LiteralNode {
   kind: 'literal';
-  value: string | number | boolean;
+  value: string | number | boolean | { value: number; unit?: string };
   dataType: 'string' | 'number' | 'boolean' | 'date' | 'time' | 'datetime' | 'quantity';
   start: number;
   end: number;

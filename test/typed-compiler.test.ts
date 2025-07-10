@@ -106,8 +106,8 @@ test("compile indexer", () => {
   expect(result.hasErrors).toBe(false);
   
   // Test execution
-  const mockContext = [["first", "second", "third"]];
-  const evalResult = result.compiledNode.eval(mockContext, null, {});
+  const data = [["first", "second", "third"]];
+  const evalResult = result.compiledNode.eval(data, data, {});
   expect(evalResult).toEqual(["first"]);
 });
 

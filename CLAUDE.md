@@ -16,7 +16,7 @@ alwaysApply: false
 * Use ./scripts folder to write typescript scripts and run with bun
 * All tests are in ./test folder
 * ./antlr - antlr implementation to compare performance of main library (do not change it unless user asks for it)
-
+* Remember fhirpath does not support double quotes in strings. Use single quotes instead.
 
 ## Use Bun instead of Node.js
 

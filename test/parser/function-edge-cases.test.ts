@@ -65,7 +65,7 @@ describe('Function edge cases', () => {
   });
 
   test('should parse functions with special characters in arguments', () => {
-    const ast = parse('Patient.customSearch("name=O\'Brien", "city=New York")') as any;
+    const ast = parse("Patient.customSearch('name=O\\'Brien', 'city=New York')") as any;
     expect(ast.kind).toBe('dot');
     expect(ast.right.kind).toBe('function');
     expect(ast.right.name).toBe('customSearch');
@@ -127,8 +127,8 @@ describe('Function edge cases', () => {
   });
 
   test('should parse custom functions with all argument types', () => {
-    const ast = parse('customFunc(42, "string", true, @2023-01-01, @T12:30:00, @2023-01-01T12:30:00Z, 5 \'mg\', $this, %resource, Patient.name, otherFunc())') as any;
-    printAST(ast);
+    const ast = parse('customFunc(42, \'string\', true, @2023-01-01, @T12:30:00, @2023-01-01T12:30:00Z, 5 \'mg\', $this, %resource, Patient.name, otherFunc())') as any;
+    //printAST(ast);
 
     expect(ast.kind).toBe('function');
     expect(ast.name).toBe('customFunc');

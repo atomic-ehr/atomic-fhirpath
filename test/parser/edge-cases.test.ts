@@ -75,7 +75,7 @@ describe('Edge Cases and Additional Tests', () => {
   });
 
   test('should handle nested function calls', () => {
-    const expr = 'Patient.name.where(use = "official").exists()';
+    const expr = "Patient.name.where(use = 'official').exists()";
     const result = parse(expr);
     
     // The result is a dot expression where:
@@ -112,7 +112,7 @@ describe('Edge Cases and Additional Tests', () => {
   test('should handle special characters in strings', () => {
     const tests = [
       { expr: "'hello\\'world'", expected: "hello'world" },
-      { expr: '"hello\\"world"', expected: 'hello"world' },
+      { expr: "'hello\"world'", expected: 'hello"world' },
       { expr: "'hello\\nworld'", expected: "hello\nworld" },
       { expr: "'hello\\tworld'", expected: "hello\tworld" },
     ];

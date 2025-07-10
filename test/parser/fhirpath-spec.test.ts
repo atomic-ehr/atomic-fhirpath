@@ -95,18 +95,12 @@ describe('FHIRPath Specification Examples', () => {
     });
 
     test('should parse string literals', () => {
-      const exprs = [
-        "'hello'",
-        '"world"',
-        "'hello world'",
-        '"O\'Brien"', // Quote in double-quoted string
-        "'line1\\nline2'", // Escaped newline
-      ];
-
-      for (const expr of exprs) {
-        const result = testParse(expr);
-        expect(result.success).toBe(true);
-      }
+      // Separate expects for each string literal
+      expect(testParse("'hello'").success).toBe(true);
+      expect(testParse("'world'").success).toBe(true);
+      expect(testParse("'hello world'").success).toBe(true);
+      expect(testParse("'O\\'Brien'").success).toBe(true); // Quote in quoted string
+      expect(testParse("'line1\\nline2'").success).toBe(true); // Escaped newline
     });
 
     test('should parse date/time literals', () => {
@@ -161,7 +155,7 @@ describe('FHIRPath Specification Examples', () => {
       for (const expr of exprs) {
         const result = testParse(expr);
         if (!result.success) {
-          console.error(`Failed to parse: ${expr}`, result.error?.message);
+          console.error(`Failed to parse: ${expr}`, (result.error as any).message);
         }
         expect(result.success).toBe(true);
       }

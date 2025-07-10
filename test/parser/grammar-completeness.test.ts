@@ -1,4 +1,4 @@
-import { test, expect, describe } from 'bun:test';
+import { test, expect, describe, it } from 'bun:test';
 import { parse, printAST } from '../../src';
 
 describe('Grammar Completeness Check', () => {
@@ -122,14 +122,12 @@ describe('Grammar Completeness Check', () => {
       
       // stringLiteral
       expect(() => parse("'hello'")).not.toThrow();
-      expect(() => parse('"world"')).not.toThrow();
+      expect(() => parse('"world"')).toThrow();
       
       // numberLiteral
       expect(() => parse('42')).not.toThrow();
       expect(() => parse('3.14')).not.toThrow();
-      
-      // longNumberLiteral
-      expect(() => parse('123L')).not.toThrow();
+
       
       // dateLiteral
       expect(() => parse('@2023-01-15')).not.toThrow();
@@ -144,12 +142,20 @@ describe('Grammar Completeness Check', () => {
       expect(() => parse("5 'mg'")).not.toThrow();
       expect(() => parse('18 years')).not.toThrow();
     });
+
+      
+    test('should parse long number literals', () => {
+      // longNumberLiteral
+      expect(() => parse('123L')).not.toThrow();
+    });
     
     // externalConstantTerm
     test('external constants', () => {
       expect(() => parse('%resource')).not.toThrow();
       expect(() => parse("%'some constant'")).not.toThrow();
       expect(() => parse('%ucum')).not.toThrow();
+
+      expect(() => parse('%ucum a')).not.toThrow();
     });
     
     // parenthesizedTerm
@@ -163,7 +169,6 @@ describe('Grammar Completeness Check', () => {
   describe('Special identifiers that can be used as regular identifiers', () => {
     // From the grammar, these keywords can also be identifiers in certain contexts
     test('keywords as identifiers from grammar', () => {
-      printAST(parse('Patient in'));
 
       expect(() => parse('as')).not.toThrow(); // identifier rule includes 'as'
       expect(() => parse('contains')).not.toThrow(); // identifier rule includes 'contains'

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { parse, clearCache } from '../../src';
+import { parse, clearParserCache } from '../../src';
 
 // Performance log file
 const PERF_LOG_FILE = path.join(__dirname, '..', 'performance.log');
@@ -181,13 +181,13 @@ export function measureParsePerformance(name: string, expression: string, iterat
 export function measureParsePerformanceComparison(name: string, expression: string, iterations: number): { cached: PerfResult, nonCached: PerfResult } {
   // Measure non-cached performance
   const nonCachedFn = () => {
-    clearCache();
+    clearParserCache();
     parse(expression, false);
   };
   const nonCached = measurePerformance(`${expression}-nocache`, iterations, nonCachedFn);
   
   // Prime cache and measure cached performance
-  clearCache();
+  clearParserCache();
   parse(expression, true); // Prime the cache
   const cachedFn = () => {
     parse(expression, true);

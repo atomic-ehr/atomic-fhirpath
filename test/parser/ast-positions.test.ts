@@ -140,12 +140,12 @@ describe('AST Position Tracking', () => {
     });
 
     test('should track positions in function call with args', () => {
-      const input = 'where(use = "official")';
+      const input = "where(use = 'official')";
       const ast = parse(input);
       expect(ast.kind).toBe('function');
       expect(ast.start).toBe(0);
       expect(ast.end).toBe(23);
-      expect(input.substring(ast.start, ast.end)).toBe('where(use = "official")');
+      expect(input.substring(ast.start, ast.end)).toBe("where(use = 'official')");
       
       // Check the argument
       const arg = (ast as any).args[0];
@@ -189,7 +189,7 @@ describe('AST Position Tracking', () => {
 
   describe('Complex expressions', () => {
     test('should track positions in complex nested expression', () => {
-      const input = 'Patient.name.where(use = "official").given[0]';
+      const input = "Patient.name.where(use = 'official').given[0]";
       const ast = parse(input);
       expect(ast.kind).toBe('indexer');
       expect(ast.start).toBe(0);
@@ -288,7 +288,7 @@ describe('AST Position Tracking', () => {
 
   describe('Position invariants', () => {
     test('parent node should encompass all child nodes', () => {
-      const input = 'Patient.name.where(use = "official")';
+      const input = "Patient.name.where(use = 'official')";
       const ast = parse(input);
       
       function checkInvariant(node: any, parentStart?: number, parentEnd?: number) {
@@ -321,25 +321,107 @@ describe('AST Position Tracking', () => {
     });
 
     test('position should map to exact source text', () => {
-      const expressions = [
-        'Patient',
-        '42',
-        "'hello'",
-        'true',
-        '5 + 3',
-        'Patient.name',
-        'exists()',
-        'name[0]',
-        '$this',
-        '%resource',
-        '@2023-01-01',
-        "5 'mg'",
-        '{}',
-        'value is Patient',
-        'Patient.name.where(use = "official").given[0]'
-      ];
-      
-      expressions.forEach(input => {
+      // Refactored: separate expects for each expression
+      test('position should map to exact source text: Patient', () => {
+        const input = 'Patient';
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test('position should map to exact source text: 42', () => {
+        const input = '42';
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test("position should map to exact source text: 'hello'", () => {
+        const input = "'hello'";
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test('position should map to exact source text: true', () => {
+        const input = 'true';
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test('position should map to exact source text: 5 + 3', () => {
+        const input = '5 + 3';
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test('position should map to exact source text: Patient.name', () => {
+        const input = 'Patient.name';
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test('position should map to exact source text: exists()', () => {
+        const input = 'exists()';
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test('position should map to exact source text: name[0]', () => {
+        const input = 'name[0]';
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test('position should map to exact source text: $this', () => {
+        const input = '$this';
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test('position should map to exact source text: %resource', () => {
+        const input = '%resource';
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test('position should map to exact source text: @2023-01-01', () => {
+        const input = '@2023-01-01';
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test("position should map to exact source text: 5 'mg'", () => {
+        const input = "5 'mg'";
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test('position should map to exact source text: {}', () => {
+        const input = '{}';
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test('position should map to exact source text: value is Patient', () => {
+        const input = 'value is Patient';
+        const ast = parse(input);
+        const extracted = input.substring(ast.start, ast.end);
+        expect(extracted).toBe(input.trim());
+      });
+
+      test('position should map to exact source text: Patient.name.where(use = "official").given[0]', () => {
+        const input = 'Patient.name.where(use = "official").given[0]';
         const ast = parse(input);
         const extracted = input.substring(ast.start, ast.end);
         expect(extracted).toBe(input.trim());
