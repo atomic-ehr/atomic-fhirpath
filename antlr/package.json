@@ -1,0 +1,34 @@
+{
+  "name": "fhirpath-antlr-parser",
+  "version": "1.0.0",
+  "description": "ANTLR-generated TypeScript parser for FHIRPath expressions",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "bun build --target=node --outdir=dist --minify *.ts",
+    "build-tsc": "tsc",
+    "demo": "bun run dist/FhirpathParserDemo.js",
+    "demo-errors": "bun -e \"import('./dist/ParseErrorDemo.js').then(m => m.runAllDemonstrations())\"",
+    "demo-errors-direct": "bun run ParseErrorDemo.ts",
+    "test-parsing": "bun -e \"import('./dist/FhirpathParseUtils.js').then(m => { const r = m.parseFhirpath('Patient.name.given'); console.log('Success:', r.success); })\"",
+    "test-parsing-direct": "bun -e \"import('./FhirpathParseUtils.ts').then(m => { const r = m.parseFhirpath('Patient.name.given'); console.log('Success:', r.success); })\"",
+    "generate": "antlr -Dlanguage=TypeScript fhirpath.g4 -visitor -o generated"
+  },
+  "dependencies": {
+    "antlr4": "^4.13.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "keywords": [
+    "fhirpath",
+    "antlr",
+    "parser",
+    "typescript",
+    "healthcare",
+    "fhir"
+  ],
+  "author": "",
+  "license": "MIT"
+} 

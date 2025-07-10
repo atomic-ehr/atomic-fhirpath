@@ -1,0 +1,23 @@
+{
+  "name": "@atomic-ehr/fhirpath",
+  "version": "0.0.1",
+  "description": "FHIRPath implementation in TypeScript",
+  "author": "niquola, claude code, cusror + claude",
+  "license": "MIT",
+  "type": "module"  ,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomic-ehr/fhirpath"
+  },
+  "scripts": {
+    "typecheck": "bun --bun tsc --noEmit",
+    "test": "bun test",
+    "dev": "bun run --watch index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
