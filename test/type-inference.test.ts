@@ -3,6 +3,7 @@ import { parse } from "../src/index";
 import { TypedNodeUtils } from "../src/typed-nodes";
 import { TypeInferenceEngine } from "../src/type-inference";
 import { 
+  type FHIRPathType,
   STRING_TYPE, 
   INTEGER_TYPE, 
   DECIMAL_TYPE, 
@@ -85,7 +86,7 @@ test("function call type inference - count", () => {
 
 test("dot navigation type inference", () => {
   // Create a mock resource type with properties
-  const patientType = createResourceType("Patient", new Map([
+  const patientType = createResourceType("Patient", new Map<string, FHIRPathType>([
     ["name", createCollectionType(STRING_TYPE)],
     ["age", INTEGER_TYPE]
   ]));

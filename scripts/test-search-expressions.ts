@@ -98,7 +98,7 @@ async function testSearchExpressions() {
   console.log('\n🔍 Analysis:');
   
   // Check for common patterns in failed expressions
-  const patterns = {
+  const patterns: Record<string, number> = {
     'resolve()': 0,
     'extension(': 0,
     'as(': 0,
@@ -113,9 +113,9 @@ async function testSearchExpressions() {
   };
 
   for (const expr of data.uniqueExpressions) {
-    for (const [pattern, _] of Object.entries(patterns)) {
+    for (const pattern of Object.keys(patterns)) {
       if (expr.includes(pattern)) {
-        patterns[pattern]++;
+        patterns[pattern] = patterns[pattern]! + 1;
       }
     }
   }

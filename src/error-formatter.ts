@@ -1,4 +1,4 @@
-import { ParseError } from './types';
+import type { ParseError } from './types';
 
 /**
  * Enhanced error formatter that shows the expression with error position highlighted
@@ -45,7 +45,10 @@ export function formatError(
   let lineStartPos = 0;
   
   for (let i = 0; i < errorLine && i < lines.length; i++) {
-    currentPos += lines[i].length + 1; // +1 for newline
+    const line = lines[i];
+    if (line !== undefined) {
+      currentPos += line.length + 1; // +1 for newline
+    }
   }
   lineStartPos = currentPos;
   
@@ -67,7 +70,8 @@ export function formatError(
       // Source line format: "> NNNN | expression"
       // Caret line format: "       | spaces^^^^^"
       const spaces = ' '.repeat(error.column - 1); // -1 because column is 1-based
-      const carets = '^'.repeat(Math.min(5, Math.max(1, lines[i].length - error.column + 1)));
+      const currentLine = lines[i] || '';
+      const carets = '^'.repeat(Math.min(5, Math.max(1, currentLine.length - error.column + 1)));
       contextBuilder.push(`       | ${spaces}${carets}`);
     }
   }

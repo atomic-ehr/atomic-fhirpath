@@ -167,7 +167,7 @@ export function measureParsePerformance(name: string, expression: string, iterat
   // Setup function based on cache usage
   const parseFn = () => {
     if (!useCache) {
-      clearCache();
+      clearParserCache();
     }
     parse(expression, useCache);
   };

@@ -245,7 +245,7 @@ async function extractConstraintExpressions() {
   
   // Most common patterns
   console.log('\n📋 Common patterns in constraint expressions:');
-  const patterns = {
+  const patterns: Record<string, number> = {
     'hasValue()': 0,
     'exists()': 0,
     'empty()': 0,
@@ -267,9 +267,9 @@ async function extractConstraintExpressions() {
   };
   
   for (const expr of uniqueExpressions) {
-    for (const [pattern, _] of Object.entries(patterns)) {
+    for (const pattern of Object.keys(patterns)) {
       if (expr.includes(pattern)) {
-        patterns[pattern]++;
+        patterns[pattern] = patterns[pattern]! + 1;
       }
     }
   }

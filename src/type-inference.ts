@@ -6,7 +6,7 @@
  */
 
 import { 
-  FHIRPathType, 
+  type FHIRPathType, 
   STRING_TYPE, 
   INTEGER_TYPE, 
   DECIMAL_TYPE, 
@@ -23,24 +23,24 @@ import {
 } from './type-system';
 
 import { 
-  TypedASTNode, 
-  TypedLiteralNode, 
-  TypedIdentifierNode, 
-  TypedBinaryOpNode, 
-  TypedUnaryOpNode, 
-  TypedFunctionCallNode, 
-  TypedIndexerNode, 
-  TypedDotNode, 
-  TypedAsTypeNode, 
-  TypedIsTypeNode, 
-  TypedVariableNode, 
-  TypedEnvironmentVariableNode, 
-  TypedNullLiteralNode,
+  type TypedASTNode, 
+  type TypedLiteralNode, 
+  type TypedIdentifierNode, 
+  type TypedBinaryOpNode, 
+  type TypedUnaryOpNode, 
+  type TypedFunctionCallNode, 
+  type TypedIndexerNode, 
+  type TypedDotNode, 
+  type TypedAsTypeNode, 
+  type TypedIsTypeNode, 
+  type TypedVariableNode, 
+  type TypedEnvironmentVariableNode, 
+  type TypedNullLiteralNode,
   TypedNodeUtils
 } from './typed-nodes';
 
 import { functionRegistry } from './function-registry';
-import { ModelProvider, NullModelProvider } from './model-provider';
+import { type ModelProvider, NullModelProvider } from './model-provider';
 import { TokenType } from './types';
 
 export interface TypeInferenceContext {

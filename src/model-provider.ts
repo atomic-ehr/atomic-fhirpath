@@ -5,7 +5,7 @@
  * This interface will be implemented later with actual FHIR schema data.
  */
 
-import { FHIRPathType, ResourceType } from './type-system';
+import { type FHIRPathType, type ResourceType } from './type-system';
 
 export interface ModelProvider {
   /**

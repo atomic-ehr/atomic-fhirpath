@@ -126,7 +126,7 @@ class FhirpathAnalyzer extends ParseTreeVisitor<string> {
     }
     
     // Default visit method for unhandled cases
-    visitChildren(node: any): string {
+    override visitChildren(node: any): string {
         if (!node) return '';
         
         let result = '';

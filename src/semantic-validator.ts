@@ -6,31 +6,31 @@
  */
 
 import { 
-  FHIRPathType, 
+  type FHIRPathType, 
   TypeCompatibility, 
   CardinalityOps 
 } from './type-system';
 
 import { 
-  TypedASTNode, 
-  TypedLiteralNode, 
-  TypedIdentifierNode, 
-  TypedBinaryOpNode, 
-  TypedUnaryOpNode, 
-  TypedFunctionCallNode, 
-  TypedIndexerNode, 
-  TypedDotNode, 
-  TypedAsTypeNode, 
-  TypedIsTypeNode, 
-  TypedVariableNode, 
-  TypedEnvironmentVariableNode, 
-  TypedNullLiteralNode,
+  type TypedASTNode, 
+  type TypedLiteralNode, 
+  type TypedIdentifierNode, 
+  type TypedBinaryOpNode, 
+  type TypedUnaryOpNode, 
+  type TypedFunctionCallNode, 
+  type TypedIndexerNode, 
+  type TypedDotNode, 
+  type TypedAsTypeNode, 
+  type TypedIsTypeNode, 
+  type TypedVariableNode, 
+  type TypedEnvironmentVariableNode, 
+  type TypedNullLiteralNode,
   TypedNodeUtils
 } from './typed-nodes';
 
 import { functionRegistry } from './function-registry';
-import { ModelProvider, NullModelProvider } from './model-provider';
-import { TypeInferenceContext } from './type-inference';
+import { type ModelProvider, NullModelProvider } from './model-provider';
+import { type TypeInferenceContext } from './type-inference';
 import { TokenType } from './types';
 
 export interface ValidationError {

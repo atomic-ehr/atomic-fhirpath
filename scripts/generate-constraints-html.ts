@@ -37,7 +37,7 @@ function escapeHtml(text: string): string {
     '"': '&quot;',
     "'": '&#39;'
   };
-  return text.replace(/[&<>"']/g, (char) => map[char]);
+  return text.replace(/[&<>"']/g, (char) => map[char]!);
 }
 
 // Function to generate a tree visualization of the AST
@@ -437,10 +437,10 @@ function generateHTML() {
     <div class="category-section">
         <h2 class="category-header">
             ${resourceType}
-            <span class="expression-count">(${constraints.length} constraints)</span>
+            <span class="expression-count">(${constraints!.length} constraints)</span>
         </h2>`;
     
-    constraints.forEach((expr, index) => {
+    constraints!.forEach((expr, index) => {
       let astTree = '';
       let parseError = '';
       

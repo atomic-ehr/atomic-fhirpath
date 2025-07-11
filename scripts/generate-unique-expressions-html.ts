@@ -36,7 +36,7 @@ function escapeHtml(text: string): string {
     '"': '&quot;',
     "'": '&#39;'
   };
-  return text.replace(/[&<>"']/g, (char) => map[char]);
+  return text.replace(/[&<>"']/g, (char) => map[char]!);
 }
 
 // Generate HTML tree visualization with position data
@@ -150,6 +150,9 @@ function generateHTMLTree(node: ASTNode, exprId: number): string {
           <span class="ast-node-expr">→ ${escapeHtml(reconstructed)}</span>
         </div>`;
   }
+  
+  // This should never happen due to exhaustive switch, but TypeScript needs it
+  return '';
 }
 
 function getOperatorSymbol(op: TokenType): string {

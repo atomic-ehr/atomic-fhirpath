@@ -395,7 +395,7 @@ function getOperatorSymbol(op: TokenType): string {
     case TokenType.EQUIVALENCE: return '~';
     case TokenType.NOT_EQUIVALENCE: return '!~';
 
-    default: return TokenType[op] || `Op${op}`;
+    default: return `Op${op}`;
   }
 }
 

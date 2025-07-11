@@ -97,9 +97,9 @@ for (const { expr, name } of testExpressions) {
     // Calculate statistics
     times.sort((a, b) => a - b);
     const avg = times.reduce((a, b) => a + b, 0) / times.length;
-    const median = times[Math.floor(times.length / 2)];
-    const min = times[0];
-    const max = times[times.length - 1];
+    const median = times[Math.floor(times.length / 2)]!;
+    const min = times[0]!;
+    const max = times[times.length - 1]!;
     
     // Format output
     const tierStr = tier.padEnd(20);

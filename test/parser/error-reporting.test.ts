@@ -49,7 +49,7 @@ describe('Enhanced Error Reporting', () => {
     try {
       parse('Patient.name = "unterminated');
     } catch (error) {
-      const formatted = error.message;
+      const formatted = (error as Error).message;
       expect(formatted).toContain('Unterminated string');
       console.log('\nUnterminated string error:');
       console.log(formatted);
@@ -59,7 +59,7 @@ describe('Enhanced Error Reporting', () => {
     try {
       parse('exists(name.given');
     } catch (error) {
-      const formatted = error.message;
+      const formatted = (error as Error).message;
       expect(formatted).toContain('Expected closing parenthesis');
       console.log('\nMissing parenthesis error:');
       console.log(formatted);
@@ -69,7 +69,7 @@ describe('Enhanced Error Reporting', () => {
     try {
       parse('Patient..name');
     } catch (error) {
-      const formatted = error.message;
+      const formatted = (error as Error).message;
       expect(formatted).toContain('Expected identifier after dot');
       console.log('\nUnexpected token error:');
       console.log(formatted);
@@ -81,7 +81,7 @@ describe('Enhanced Error Reporting', () => {
     try {
       parse('(');
     } catch (error) {
-      const formatted = error.message;
+      const formatted = (error as Error).message;
       expect(formatted).toContain('at line 1, column 1');
       console.log('\nError at beginning:');
       console.log(formatted);
@@ -91,7 +91,7 @@ describe('Enhanced Error Reporting', () => {
     try {
       parse('Patient.name[0]..given');
     } catch (error) {
-      const formatted = error.message;
+      const formatted = (error as Error).message;
       expect(formatted).toContain('Expected identifier after dot');
       expect(formatted).toContain('Patient.name[0]..given');
       console.log('\nError in middle:');
@@ -102,7 +102,7 @@ describe('Enhanced Error Reporting', () => {
     try {
       parse('Patient.name +');
     } catch (error) {
-      const formatted = error.message;
+      const formatted = (error as Error).message;
       expect(formatted).toContain('Patient.name +');
       console.log('\nError at end:');
       console.log(formatted);

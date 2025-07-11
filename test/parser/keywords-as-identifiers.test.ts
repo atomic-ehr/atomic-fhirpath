@@ -221,7 +221,7 @@ describe('Keywords as Identifiers', () => {
       expect((ast2 as any).name).toBe('where');
       
       // Both produce the same result
-      expect(ast1.name).toBe(ast2.name);
+      expect((ast1 as any).name).toBe((ast2 as any).name);
     });
   });
 

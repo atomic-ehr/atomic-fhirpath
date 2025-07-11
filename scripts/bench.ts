@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { parse, clearCache } from '../src';
+import { parse, clearParserCache } from '../src';
 
 const expressions = [
   { name: 'simple', expr: 'name' },
@@ -16,17 +16,17 @@ console.log('🚀 FHIRPath Parser Quick Benchmark\n');
 // Benchmark without cache
 console.log('📊 Without Cache:');
 for (const { name, expr } of expressions) {
-  clearCache();
+  clearParserCache();
   
   // Warmup
   for (let i = 0; i < 100; i++) {
-    clearCache();
+    clearParserCache();
     parse(expr);
   }
   
   const start = performance.now();
   for (let i = 0; i < iterations; i++) {
-    clearCache();
+    clearParserCache();
     parse(expr);
   }
   const time = performance.now() - start;
@@ -37,7 +37,7 @@ for (const { name, expr } of expressions) {
 
 console.log('\n📊 With Cache:');
 for (const { name, expr } of expressions) {
-  clearCache();
+  clearParserCache();
   parse(expr); // Prime cache
   
   // Warmup

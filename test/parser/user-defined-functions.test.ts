@@ -118,7 +118,7 @@ describe('User-defined functions', () => {
     expect((ast as any).right.args[2].kind).toBe('literal');
     expect((ast as any).right.args[2].value).toBe(true);
     expect((ast as any).right.args[3].kind).toBe('literal');
-    expect(ast.right.args[3].value).toBe(3.14);
+    expect((ast as any).right.args[3].value).toBe(3.14);
   });
 
   test('should parse user-defined functions with date/time arguments', () => {

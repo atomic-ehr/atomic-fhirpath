@@ -1,6 +1,37 @@
 import { parse } from '../src';
 import { TokenType } from '../src/types';
 
+// Helper function to get operator name
+function getOperatorName(op: TokenType): string {
+  switch (op) {
+    case TokenType.DOT: return 'DOT';
+    case TokenType.PLUS: return 'PLUS';
+    case TokenType.MINUS: return 'MINUS';
+    case TokenType.MULTIPLY: return 'MULTIPLY';
+    case TokenType.DIVIDE: return 'DIVIDE';
+    case TokenType.MOD: return 'MOD';
+    case TokenType.DIV: return 'DIV';
+    case TokenType.EQUALS: return 'EQUALS';
+    case TokenType.NOT_EQUALS: return 'NOT_EQUALS';
+    case TokenType.LESS_THAN: return 'LESS_THAN';
+    case TokenType.GREATER_THAN: return 'GREATER_THAN';
+    case TokenType.LESS_EQUALS: return 'LESS_EQUALS';
+    case TokenType.GREATER_EQUALS: return 'GREATER_EQUALS';
+    case TokenType.AND: return 'AND';
+    case TokenType.OR: return 'OR';
+    case TokenType.IMPLIES: return 'IMPLIES';
+    case TokenType.XOR: return 'XOR';
+    case TokenType.NOT: return 'NOT';
+    case TokenType.IN: return 'IN';
+    case TokenType.CONTAINS: return 'CONTAINS';
+    case TokenType.PIPE: return 'PIPE';
+    case TokenType.AS_TYPE: return 'AS_TYPE';
+    case TokenType.IS_TYPE: return 'IS_TYPE';
+    case TokenType.AMPERSAND: return 'AMPERSAND';
+    default: return `Unknown(${op})`;
+  }
+}
+
 // Test expressions with various operators
 const testExpressions = [
   'a + b',
@@ -39,7 +70,7 @@ testExpressions.forEach(expr => {
     if (ast.kind === 'binary' || ast.kind === 'unary') {
       console.log(`Expression: "${expr}"`);
       console.log(`  Operator code: ${ast.op}`);
-      console.log(`  Operator name: ${TokenType[ast.op]}`);
+      console.log(`  Operator name: ${getOperatorName(ast.op)}`);
       console.log('');
     } else if (ast.kind === 'dot') {
       console.log(`Expression: "${expr}"`);

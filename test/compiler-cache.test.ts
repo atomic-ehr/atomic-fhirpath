@@ -33,7 +33,7 @@ describe('Compiler Caching', () => {
     expect(result2).toEqual(['John', 'Q']);
     
     // Verify same compiled node was used
-    expect(ctx._cache!.get('name.given')).toBe(cachedCompiled);
+    expect(ctx._cache!.get('name.given')).toBe(cachedCompiled!);
     expect(ctx._cache!.size).toBe(1);
   });
 
@@ -127,7 +127,7 @@ describe('Compiler Caching', () => {
       evaluate(ctx, expr, {}); // Compile with empty data
     }
     
-    expect(ctx._cache.size).toBe(3);
+    expect(ctx._cache!.size).toBe(3);
     
     // Now use with real data - should use cached versions
     expect(evaluate(ctx, 'name', patient)).toEqual(patient.name);

@@ -27,7 +27,7 @@ import { parseFhirpathExpression as antlrParseDemo } from './FhirpathParserDemo.
 import { parseRawAntlr } from './raw-parser.js';
 
 // Import custom parser functions  
-import { parse as customParse, clearCache } from '../src/index';
+import { parse as customParse, clearParserCache } from '../src/index';
 
 
 
@@ -66,13 +66,13 @@ const PARSERS: ParserBenchmark[] = [
   {
     name: "Custom Parser (no cache)",
     parseFunction: (expr: string) => {
-      clearCache();
+      clearParserCache();
       return customParse(expr, false);
     },
     warmupFn: () => {
       // Warmup the custom parser
       for (let i = 0; i < 50; i++) {
-        clearCache();
+        clearParserCache();
         customParse(TEST_EXPRESSION, false);
       }
     }
@@ -82,12 +82,12 @@ const PARSERS: ParserBenchmark[] = [
     parseFunction: (expr: string) => customParse(expr, true),
     setupFn: () => {
       // Prime the cache
-      clearCache();
+      clearParserCache();
       customParse(TEST_EXPRESSION, true);
     },
     warmupFn: () => {
       // Warmup with caching
-      clearCache();
+      clearParserCache();
       customParse(TEST_EXPRESSION, true); // Prime cache
       for (let i = 0; i < 50; i++) {
         customParse(TEST_EXPRESSION, true);
@@ -157,7 +157,7 @@ function getConfig(): ComparisonConfig {
   // Check for custom iteration count
   const iterIndex = process.argv.findIndex(arg => arg === '--iterations');
   if (iterIndex !== -1 && iterIndex + 1 < process.argv.length) {
-    const customIterations = parseInt(process.argv[iterIndex + 1], 10);
+    const customIterations = parseInt(process.argv[iterIndex + 1] || '0', 10);
     if (!isNaN(customIterations) && customIterations > 0) {
       config.iterations = customIterations;
     }

@@ -5,33 +5,18 @@
  * with type inference and validation integrated into the compilation process.
  */
 
-import { ASTNode } from './types';
-import { 
-  TypedASTNode, 
-  TypedNodeUtils 
-} from './typed-nodes';
-import { 
-  TypeInferenceEngine, 
-  TypeInferenceContext 
-} from './type-inference';
-import { 
-  SemanticValidator, 
-  ValidationContext, 
-  ValidationResult 
-} from './semantic-validator';
-import { 
-  CompiledNode, 
-  EvalFunction, 
-  EvaluationContext 
-} from './compiler-types';
-import { 
-  FHIRPathType, 
-  ANY_TYPE 
-} from './type-system';
-import { 
-  ModelProvider, 
-  NullModelProvider 
-} from './model-provider';
+import type { ASTNode } from './types';
+import type { TypedASTNode } from './typed-nodes';
+import { TypedNodeUtils } from './typed-nodes';
+import { TypeInferenceEngine } from './type-inference';
+import type { TypeInferenceContext } from './type-inference';
+import { SemanticValidator } from './semantic-validator';
+import type { ValidationContext, ValidationResult } from './semantic-validator';
+import type { CompiledNode, EvalFunction, EvaluationContext } from './compiler-types';
+import type { FHIRPathType } from './type-system';
+import { ANY_TYPE } from './type-system';
+import type { ModelProvider } from './model-provider';
+import { NullModelProvider } from './model-provider';
 
 export interface TypedCompilerOptions {
   readonly modelProvider?: ModelProvider;
@@ -175,7 +160,7 @@ export class TypedCompiler {
     return {
       ...node,
       eval: () => { throw new Error('Base eval function should be overridden'); }
-    };
+    } as CompiledNode;
   }
   
   private compileLiteral(node: TypedASTNode, base: CompiledNode): CompiledNode {
@@ -258,7 +243,7 @@ export class TypedCompiler {
     return {
       ...base,
       eval: (context: any[], data: any, ctx: EvaluationContext): any[] => {
-        const argResults = argCompiled.map(arg => arg.eval(context, data, ctx));
+        const argResults = argCompiled.map((arg: CompiledNode) => arg.eval(context, data, ctx));
         return this.evaluateFunctionCall(funcNode.name, context, argResults, ctx);
       }
     };

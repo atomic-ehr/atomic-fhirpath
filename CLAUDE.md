@@ -17,6 +17,8 @@ alwaysApply: false
 * All tests are in ./test folder
 * ./antlr - antlr implementation to compare performance of main library (do not change it unless user asks for it)
 * Remember fhirpath does not support double quotes in strings. Use single quotes instead.
+* When writing typescript and making imports, think about 'type imports' and 'value imports'.
+* When generationg typescript file or makeing changes in file - run typecheck and fix any errors.
 
 ## Use Bun instead of Node.js
 

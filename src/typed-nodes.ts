@@ -6,23 +6,23 @@
  */
 
 import { 
-  ASTNode, 
-  LiteralNode, 
-  IdentifierNode, 
-  BinaryOpNode, 
-  UnaryOpNode, 
-  FunctionCallNode, 
-  IndexerNode, 
-  DotNode, 
-  AsTypeNode, 
-  IsTypeNode, 
-  VariableNode, 
-  EnvironmentVariableNode, 
-  NullLiteralNode,
+  type ASTNode, 
+  type LiteralNode, 
+  type IdentifierNode, 
+  type BinaryOpNode, 
+  type UnaryOpNode, 
+  type FunctionCallNode, 
+  type IndexerNode, 
+  type DotNode, 
+  type AsTypeNode, 
+  type IsTypeNode, 
+  type VariableNode, 
+  type EnvironmentVariableNode, 
+  type NullLiteralNode,
   TokenType
 } from './types';
 
-import { FHIRPathType } from './type-system';
+import { type FHIRPathType } from './type-system';
 
 // Base typed node interface
 export interface TypedNode {

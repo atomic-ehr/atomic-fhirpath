@@ -62,7 +62,7 @@ export function demonstrateErrorHandling() {
             console.log(`🔍 Errors: ${formatParseErrors(result.errors)}`);
             
             // Show suggestions for the first error
-            if (result.errors.length > 0) {
+            if (result.errors.length > 0 && result.errors[0]) {
                 const suggestions = getErrorSuggestions(result.errors[0]);
                 if (suggestions.length > 0) {
                     console.log(`💡 Suggestions: ${suggestions.join('; ')}`);

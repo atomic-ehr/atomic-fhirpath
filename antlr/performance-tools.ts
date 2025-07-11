@@ -58,11 +58,11 @@ export function measurePerformance(name: string, iterations: number, fn: () => v
 
   const totalMs = times.reduce((sum, t) => sum + t, 0) / 1000;
   const avgUs = times.reduce((sum, t) => sum + t, 0) / iterations;
-  const minUs = times[0];
-  const maxUs = times[times.length - 1];
-  const medianUs = times[Math.floor(iterations / 2)];
-  const p95Us = times[Math.floor(iterations * 0.95)];
-  const p99Us = times[Math.floor(iterations * 0.99)];
+  const minUs = times[0] || 0;
+  const maxUs = times[times.length - 1] || 0;
+  const medianUs = times[Math.floor(iterations / 2)] || 0;
+  const p95Us = times[Math.floor(iterations * 0.95)] || 0;
+  const p99Us = times[Math.floor(iterations * 0.99)] || 0;
 
   return {
     name,
@@ -189,14 +189,17 @@ export function printComparisonSummary(results: { parser: string; result: PerfRe
   
   const fastest = results[0];
   const slowest = results[results.length - 1];
-  console.log(`\nFastest: ${fastest.parser} (${fastest.result.avgUs.toFixed(2)}μs avg)`);
-  console.log(`Slowest: ${slowest.parser} (${slowest.result.avgUs.toFixed(2)}μs avg)`);
   
-  console.log('\nRelative Performance (vs slowest):');
-  for (const { parser, result } of results) {
-    const speedup = slowest.result.avgUs / result.avgUs;
-    const opsPerSec = Math.round(1000000 / result.avgUs);
-    console.log(`  ${parser.padEnd(25)} ${result.avgUs.toFixed(2).padStart(8)}μs  ${speedup.toFixed(2).padStart(5)}x  ${opsPerSec.toLocaleString().padStart(10)} ops/sec`);
+  if (fastest && slowest) {
+    console.log(`\nFastest: ${fastest.parser} (${fastest.result.avgUs.toFixed(2)}μs avg)`);
+    console.log(`Slowest: ${slowest.parser} (${slowest.result.avgUs.toFixed(2)}μs avg)`);
+    
+    console.log('\nRelative Performance (vs slowest):');
+    for (const { parser, result } of results) {
+      const speedup = slowest.result.avgUs / result.avgUs;
+      const opsPerSec = Math.round(1000000 / result.avgUs);
+      console.log(`  ${parser.padEnd(25)} ${result.avgUs.toFixed(2).padStart(8)}μs  ${speedup.toFixed(2).padStart(5)}x  ${opsPerSec.toLocaleString().padStart(10)} ops/sec`);
+    }
   }
 }
 

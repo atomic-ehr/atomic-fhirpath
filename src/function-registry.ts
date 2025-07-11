@@ -6,7 +6,7 @@
  */
 
 import { 
-  FHIRPathType, 
+  type FHIRPathType, 
   STRING_TYPE, 
   INTEGER_TYPE, 
   DECIMAL_TYPE, 
@@ -22,7 +22,7 @@ import {
   CardinalityOps
 } from './type-system';
 
-import { FunctionSignature, FunctionParameter } from './typed-nodes';
+import { type FunctionSignature, type FunctionParameter } from './typed-nodes';
 
 export interface FunctionTypeInference {
   (paramTypes: FHIRPathType[], contextType?: FHIRPathType): FHIRPathType;
@@ -118,10 +118,13 @@ export class FunctionRegistry {
     
     // Check parameter types
     for (let i = 0; i < Math.min(paramTypes.length, sig.parameters.length); i++) {
-      const expectedType = sig.parameters[i].type;
+      const param = sig.parameters[i];
+      if (!param) continue;
+      
+      const expectedType = param.type;
       const actualType = paramTypes[i];
       
-      if (!TypeCompatibility.isAssignable(actualType, expectedType)) {
+      if (actualType && !TypeCompatibility.isAssignable(actualType, expectedType)) {
         errors.push(`Function ${functionName} parameter ${i + 1} expects ${expectedType.name}, got ${actualType.name}`);
       }
     }

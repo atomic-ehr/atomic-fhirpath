@@ -36,12 +36,12 @@ const command = args[0] || 'latest';
 
 function formatTable(headers: string[], rows: string[][]): void {
   const colWidths = headers.map((h, i) => 
-    Math.max(h.length, ...rows.map(r => r[i].length))
+    Math.max(h.length, ...rows.map(r => r[i]?.length || 0))
   );
   
   const separator = '+' + colWidths.map(w => '-'.repeat(w + 2)).join('+') + '+';
   const formatRow = (row: string[]) => 
-    '| ' + row.map((cell, i) => cell.padEnd(colWidths[i])).join(' | ') + ' |';
+    '| ' + row.map((cell, i) => cell.padEnd(colWidths[i]!)).join(' | ') + ' |';
   
   console.log(separator);
   console.log(formatRow(headers));
@@ -52,7 +52,7 @@ function formatTable(headers: string[], rows: string[][]): void {
 
 switch (command) {
   case 'latest':
-    const latest = logs[logs.length - 1];
+    const latest = logs[logs.length - 1]!;
     console.log(`\n📊 Performance Results - ${latest.version}`);
     console.log(`📅 ${new Date(latest.timestamp).toLocaleString()}\n`);
     
@@ -97,7 +97,7 @@ switch (command) {
     
   case 'compare':
     const v1 = args[1];
-    const v2 = args[2] || logs[logs.length - 1].version;
+    const v2 = args[2] || logs[logs.length - 1]!.version;
     
     const log1 = logs.find(l => l.version === v1);
     const log2 = logs.find(l => l.version === v2);
@@ -110,8 +110,8 @@ switch (command) {
     
     console.log(`\n⚖️  Comparing ${v1} vs ${v2}\n`);
     
-    const compareRows = log2.results.map(r2 => {
-      const r1 = log1.results.find(r => r.name === r2.name);
+    const compareRows = log2!.results.map(r2 => {
+      const r1 = log1!.results.find(r => r.name === r2.name);
       if (!r1) return [r2.name, 'N/A', r2.avgUs.toFixed(2) + 'μs', 'NEW'];
       
       const diff = ((r2.avgUs - r1.avgUs) / r1.avgUs) * 100;
@@ -126,7 +126,7 @@ switch (command) {
       ];
     });
     
-    formatTable(['Test', v1, v2, 'Change'], compareRows);
+    formatTable(['Test', v1!, v2, 'Change'], compareRows);
     break;
     
   default:
