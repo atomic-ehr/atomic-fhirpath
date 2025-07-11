@@ -4,23 +4,23 @@ globs: "*.ts, *.tsx, *.html, *.css, *.js, *.jsx, package.json"
 alwaysApply: false
 ---
 
-## Project Structure
+Follow this flow:
+* there is ./tasks/ folder with tasks to be done
+* Wait for user to set the task to work on; task will be a file in tasks folder
+* You working only on one task in a time - read the task file description in folder, document plan and progress back into task file. When task is completed, set it to [completed] status in a title.
+* Use ./docs as your memory bank - read current summary of project keep it up-to-date, when you are changing the project
+* the key document in ./docs is ./docs/architecture.md - it is a summary of project architecture with links to all important files
 
 
+Official website: https://ucum.org/
 * Use: bun mcp and lsp mcp
+* Use ast-grep to search for code, refactoring and linting in the project
 * Use context7 mcp to get docs about libraries
+* Use ./refs/ucum/ as official UCUM specification
 * Use bun mcp test tool or `bun test` to run tests
 * Use ./tmp folder for temporal files and scripts
-* Use ./refs/FHIRPath as official FHIRPath specification
-* Use ./docs for project documentation. Use this for any project related documentation.
 * Use ./scripts folder to write typescript scripts and run with bun
 * All tests are in ./test folder
-* ./antlr - antlr implementation to compare performance of main library (do not change it unless user asks for it)
-* Remember fhirpath does not support double quotes in strings. Use single quotes instead.
-* When writing typescript and making imports, think about 'type imports' and 'value imports'.
-* When generationg typescript file or makeing changes in file - run typecheck and fix any errors.
-
-## Use Bun instead of Node.js
 
 Default to using Bun instead of Node.js.
 
@@ -30,24 +30,3 @@ Default to using Bun instead of Node.js.
 - Use `bun install` instead of `npm install` or `yarn install` or `pnpm install`
 - Use `bun run <script>` instead of `npm run <script>` or `yarn run <script>` or `pnpm run <script>`
 - Bun automatically loads .env, so don't use dotenv.
-
-## APIs
-
-- `Bun.serve()` supports WebSockets, HTTPS, and routes. Don't use `express`.
-- `bun:sqlite` for SQLite. Don't use `better-sqlite3`.
-- `Bun.redis` for Redis. Don't use `ioredis`.
-- `Bun.sql` for Postgres. Don't use `pg` or `postgres.js`.
-- `WebSocket` is built-in. Don't use `ws`.
-- Prefer `Bun.file` over `node:fs`'s readFile/writeFile
-- Bun.$`ls` instead of execa.
-
-## Testing
-
-
-```ts#index.test.ts
-import { test, expect } from "bun:test";
-
-test("hello world", () => {
-  expect(1).toBe(1);
-});
-```
