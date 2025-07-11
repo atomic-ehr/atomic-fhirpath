@@ -172,13 +172,24 @@ export class FHIRPathCompiler {
         }
 
         // Normal property navigation
-        return context.flatMap((item) => {
+        const result = context.flatMap((item) => {
           if (item == null) return [];
           const value = item[name];
           if (value === undefined) return [];
           // Always return collections
           return Array.isArray(value) ? value : [value];
         });
+        
+        // If we didn't find anything in the context and we have a single context item,
+        // try looking in the root data object (for cases like where() and all())
+        if (result.length === 0 && context.length === 1 && data && typeof data === 'object') {
+          const rootValue = data[name];
+          if (rootValue !== undefined) {
+            return Array.isArray(rootValue) ? rootValue : [rootValue];
+          }
+        }
+        
+        return result;
       },
     };
   }
@@ -790,7 +801,30 @@ export class FHIRPathCompiler {
         ): any[] {
           const left = compiledLeft.eval(context, data, ctx);
           const right = compiledRight.eval(context, data, ctx);
-          return [...left, ...right];
+          
+          // According to FHIRPath spec, union eliminates duplicates
+          const result: any[] = [];
+          const seen = new Set<string>();
+          
+          // Add all elements from left
+          for (const item of left) {
+            const key = JSON.stringify(item);
+            if (!seen.has(key)) {
+              seen.add(key);
+              result.push(item);
+            }
+          }
+          
+          // Add all elements from right
+          for (const item of right) {
+            const key = JSON.stringify(item);
+            if (!seen.has(key)) {
+              seen.add(key);
+              result.push(item);
+            }
+          }
+          
+          return result;
         };
         break;
 
@@ -802,10 +836,21 @@ export class FHIRPathCompiler {
         ): any[] {
           const left = compiledLeft.eval(context, data, ctx);
           const right = compiledRight.eval(context, data, ctx);
-
-          if (left.length !== 1) return [];
-
-          return [right.some((item) => isEqual(item, left[0]))];
+          
+          // Empty in collection returns empty
+          if (left.length === 0) return [];
+          // X in empty returns false
+          if (right.length === 0) return [false];
+          
+          // Single value in collection
+          if (left.length === 1) {
+            return [right.some((item) => isEqual(item, left[0]))];
+          }
+          
+          // Collection in collection - element-wise membership
+          return left.map(leftItem => 
+            right.some((rightItem) => isEqual(rightItem, leftItem))
+          );
         };
         break;
 
@@ -817,10 +862,22 @@ export class FHIRPathCompiler {
         ): any[] {
           const left = compiledLeft.eval(context, data, ctx);
           const right = compiledRight.eval(context, data, ctx);
-
-          if (right.length !== 1) return [];
-
-          return [left.some((item) => isEqual(item, right[0]))];
+          
+          // Empty contains X returns false
+          if (left.length === 0) return [false];
+          // Collection contains empty returns empty
+          if (right.length === 0) return [];
+          
+          // Collection contains single value
+          if (right.length === 1) {
+            return [left.some((item) => isEqual(item, right[0]))];
+          }
+          
+          // Collection contains collection - all elements must be contained
+          const allContained = right.every(rightItem =>
+            left.some(leftItem => isEqual(leftItem, rightItem))
+          );
+          return [allContained];
         };
         break;
 

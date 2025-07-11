@@ -43,8 +43,10 @@
   - Short-circuit evaluation for `and` and `or`
   - Proper empty propagation
 
-#### Collection
-- Union: `|`
+#### Collection ✅
+- Union: `|` ✅ (eliminates duplicates as per spec)
+- Membership: `in` ✅ (supports single value and collection membership tests)
+- Contains: `contains` ✅ (reverse of `in` operator)
 
 ### Literals
 - Numbers: `42`, `3.14`

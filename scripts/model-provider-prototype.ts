@@ -335,7 +335,7 @@ class FhirR4ModelProvider {
     }
     
     // For choice types, return first option (simplified)
-    return propDef.type[0].code;
+    return propDef.type[0]?.code ?? null;
   }
   
   getChoiceTypes(resource: string, property: string): string[] | null {
@@ -351,8 +351,8 @@ class FhirR4ModelProvider {
     
     return choices.map(choice => {
       const type = Array.isArray(choice.type) ? choice.type[0] : choice.type;
-      return type.code;
-    });
+      return type?.code ?? '';
+    }).filter(code => code !== '');
   }
   
   isResourceAssignable(source: string, target: string): boolean {
@@ -409,4 +409,5 @@ function demonstrateUsage() {
 // Run the demo
 demonstrateUsage();
 
-export { FhirR4ModelProvider, TypeRegistry, ResourceDefinition, PropertyDefinition };
+export { FhirR4ModelProvider, TypeRegistry };
+export type { ResourceDefinition, PropertyDefinition };
