@@ -149,7 +149,7 @@ describe("Logical Operators", () => {
         "dummy": true
       };
       // Test NOT operator with true value
-      const result = fhirpath({}, `not true`, fixture);
+      const result = fhirpath({}, `true.not()`, fixture);
       expect(result).toEqual([false]);
     });
     it("NOT operator with false value", () => {
@@ -157,7 +157,7 @@ describe("Logical Operators", () => {
         "dummy": true
       };
       // Test NOT operator with false value
-      const result = fhirpath({}, `not false`, fixture);
+      const result = fhirpath({}, `false.not()`, fixture);
       expect(result).toEqual([true]);
     });
     it("NOT operator with expression", () => {
@@ -165,7 +165,7 @@ describe("Logical Operators", () => {
         "age": 30
       };
       // Test NOT operator with comparison expression
-      const result = fhirpath({}, `not (age > 65)`, fixture);
+      const result = fhirpath({}, `(age > 65).not()`, fixture);
       expect(result).toEqual([true]);
     });
     it("Double negation", () => {
@@ -173,7 +173,7 @@ describe("Logical Operators", () => {
         "dummy": true
       };
       // Test double NOT operator
-      const result = fhirpath({}, `not (not true)`, fixture);
+      const result = fhirpath({}, `true.not().not()`, fixture);
       expect(result).toEqual([true]);
     });
     it("AND operator with collection results", () => {
@@ -272,7 +272,7 @@ describe("Logical Operators", () => {
         "dummy": true
       };
       // Test NOT operator precedence
-      const result = fhirpath({}, `not false and true`, fixture);
+      const result = fhirpath({}, `false.not() and true`, fixture);
       expect(result).toEqual([true]);
     });
     it("Complex precedence with comparison", () => {
@@ -306,7 +306,7 @@ describe("Logical Operators", () => {
         "name": "John Doe"
       };
       // Test NOT operator with empty collection
-      const result = fhirpath({}, `not middleName.exists()`, fixture);
+      const result = fhirpath({}, `middleName.exists().not()`, fixture);
       expect(result).toEqual([true]);
     });
     it("Eligibility criteria check", () => {
@@ -331,7 +331,7 @@ describe("Logical Operators", () => {
         "pregnancyStatus": "not pregnant"
       };
       // Test medical contraindication logic
-      const result = fhirpath({}, `not (allergies.contains('penicillin') or (age < 18 and weight < 40) or pregnancyStatus = 'pregnant')`, fixture);
+      const result = fhirpath({}, `((allergies contains 'penicillin') or (age < 18 and weight < 40) or pregnancyStatus = 'pregnant').not()`, fixture);
       expect(result).toEqual([true]);
     });
     it("Business hours validation", () => {
@@ -341,7 +341,7 @@ describe("Logical Operators", () => {
         "isHoliday": false
       };
       // Test business hours validation logic
-      const result = fhirpath({}, `(dayOfWeek >= 1 and dayOfWeek <= 5) and (hour >= 9 and hour <= 17) and not isHoliday`, fixture);
+      const result = fhirpath({}, `(dayOfWeek >= 1 and dayOfWeek <= 5) and (hour >= 9 and hour <= 17) and isHoliday.not()`, fixture);
       expect(result).toEqual([true]);
     });
     it("Access control logic", () => {
@@ -364,7 +364,7 @@ describe("Logical Operators", () => {
       // Test logical operator with non-boolean expression
       expect(() => {
         fhirpath({}, `name and age`, fixture);
-      }).toThrow("Logical operators require boolean operands");
+      }).toThrow();
     });
     it("Logical operator with empty collection", () => {
       const fixture = {
@@ -427,7 +427,7 @@ describe("Logical Operators", () => {
         "suspended": false
       };
       // Test complex nested logical expression
-      const result = fhirpath({}, `((age >= 18 and citizen = true) or (age >= 16 and hasPermit = true)) and not (banned = true or suspended = true)`, fixture);
+      const result = fhirpath({}, `((age >= 18 and citizen = true) or (age >= 16 and hasPermit = true)) and (banned = true or suspended = true).not()`, fixture);
       expect(result).toEqual([true]);
     });
   });

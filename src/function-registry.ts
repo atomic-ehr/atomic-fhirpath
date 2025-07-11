@@ -75,7 +75,7 @@ export class FunctionRegistry {
    */
   getByCategory(category: string): Map<string, FunctionRegistryEntry> {
     const result = new Map<string, FunctionRegistryEntry>();
-    for (const [name, entry] of this.functions) {
+    for (const [name, entry] of Array.from(this.functions)) {
       if (entry.category === category) {
         result.set(name, entry);
       }
@@ -558,6 +558,21 @@ export class FunctionRegistry {
       inferReturnType: (paramTypes, contextType) => DATETIME_TYPE,
       category: 'type',
       description: 'Convert to datetime'
+    });
+    
+    // Logical functions
+    this.register('not', {
+      signature: {
+        name: 'not',
+        parameters: [],
+        returnType: BOOLEAN_TYPE,
+        minArity: 0,
+        maxArity: 0,
+        isVariadic: false
+      },
+      inferReturnType: (paramTypes, contextType) => BOOLEAN_TYPE,
+      category: 'logical',
+      description: 'Logical negation'
     });
     
     // Date/time functions

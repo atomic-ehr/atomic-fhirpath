@@ -19,19 +19,29 @@
 - Unary plus/minus: `+5`, `-5`
 
 #### Comparison
-- Equals: `=`
-- Not equals: `!=`
-- Less than: `<`
-- Greater than: `>`
-- Less than or equal: `<=`
-- Greater than or equal: `>=`
+- Equals: `=` ✅
+- Not equals: `!=` ✅
+- Less than: `<` ✅
+- Greater than: `>` ✅ 
+- Less than or equal: `<=` ✅
+- Greater than or equal: `>=` ✅
+- All comparison operators support:
+  - Element-wise comparison for collections
+  - Empty collection semantics
+  - Type checking (throws error for incompatible types)
+  - Temporal value comparison
 
-#### Logical
-- And: `and`
-- Or: `or`
-- Not: `not`
-- Xor: `xor`
-- Implies: `implies`
+#### Logical ✅
+- And: `and` ✅
+- Or: `or` ✅
+- Xor: `xor` ✅
+- Implies: `implies` ✅
+- Not function: `not()` ✅
+- All logical operators support:
+  - Three-valued logic (true, false, empty)
+  - Type checking (requires boolean operands)
+  - Short-circuit evaluation for `and` and `or`
+  - Proper empty propagation
 
 #### Collection
 - Union: `|`

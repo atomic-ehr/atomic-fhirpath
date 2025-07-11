@@ -35,6 +35,22 @@ import type {
 } from "./compiler-types";
 
 /**
+ * Helper function to check if types are comparable
+ */
+function areTypesComparable(left: any, right: any): boolean {
+  const leftType = typeof left;
+  const rightType = typeof right;
+  
+  // Same types are always comparable
+  if (leftType === rightType) return true;
+  
+  // Numbers (int/decimal) are comparable with each other
+  if (leftType === 'number' && rightType === 'number') return true;
+  
+  return false;
+}
+
+/**
  * FHIRPath Compiler
  *
  * Compiles AST nodes into executable nodes with eval functions.
@@ -348,10 +364,48 @@ export class FHIRPathCompiler {
           const left = compiledLeft.eval(context, data, ctx);
           const right = compiledRight.eval(context, data, ctx);
 
+          // Empty = Empty returns true
+          if (left.length === 0 && right.length === 0) return [true];
+          // Empty = Non-empty or Non-empty = Empty returns empty (not false)
           if (left.length === 0 || right.length === 0) return [];
-          if (left.length !== 1 || right.length !== 1) return [false];
-
-          return [isEqual(left[0], right[0])];
+          
+          // Single value comparison
+          if (left.length === 1 && right.length === 1) {
+            const l = left[0];
+            const r = right[0];
+            
+            // Type checking for incompatible types
+            if (!areTypesComparable(l, r)) {
+              throw new Error("Cannot compare different types");
+            }
+            
+            return [isEqual(l, r)];
+          }
+          
+          // Collection to single value comparison (element-wise)
+          if (left.length > 1 && right.length === 1) {
+            const r = right[0];
+            return left.map(l => {
+              if (!areTypesComparable(l, r)) {
+                throw new Error("Cannot compare different types");
+              }
+              return isEqual(l, r);
+            });
+          }
+          
+          // Single value to collection comparison (element-wise)
+          if (left.length === 1 && right.length > 1) {
+            const l = left[0];
+            return right.map(r => {
+              if (!areTypesComparable(l, r)) {
+                throw new Error("Cannot compare different types");
+              }
+              return isEqual(l, r);
+            });
+          }
+          
+          // Collection to collection - return false
+          return [false];
         };
         break;
 
@@ -364,10 +418,48 @@ export class FHIRPathCompiler {
           const left = compiledLeft.eval(context, data, ctx);
           const right = compiledRight.eval(context, data, ctx);
 
+          // Empty != Empty returns false
+          if (left.length === 0 && right.length === 0) return [false];
+          // Empty != Non-empty or Non-empty != Empty returns empty
           if (left.length === 0 || right.length === 0) return [];
-          if (left.length !== 1 || right.length !== 1) return [true];
-
-          return [!isEqual(left[0], right[0])];
+          
+          // Single value comparison
+          if (left.length === 1 && right.length === 1) {
+            const l = left[0];
+            const r = right[0];
+            
+            // Type checking for incompatible types
+            if (!areTypesComparable(l, r)) {
+              throw new Error("Cannot compare different types");
+            }
+            
+            return [!isEqual(l, r)];
+          }
+          
+          // Collection to single value comparison (element-wise)
+          if (left.length > 1 && right.length === 1) {
+            const r = right[0];
+            return left.map(l => {
+              if (!areTypesComparable(l, r)) {
+                throw new Error("Cannot compare different types");
+              }
+              return !isEqual(l, r);
+            });
+          }
+          
+          // Single value to collection comparison (element-wise)
+          if (left.length === 1 && right.length > 1) {
+            const l = left[0];
+            return right.map(r => {
+              if (!areTypesComparable(l, r)) {
+                throw new Error("Cannot compare different types");
+              }
+              return !isEqual(l, r);
+            });
+          }
+          
+          // Collection to collection - return true
+          return [true];
         };
         break;
 
@@ -380,22 +472,64 @@ export class FHIRPathCompiler {
           const left = compiledLeft.eval(context, data, ctx);
           const right = compiledRight.eval(context, data, ctx);
 
-          if (left.length !== 1 || right.length !== 1) return [];
+          // Empty comparisons return empty
+          if (left.length === 0 || right.length === 0) return [];
+          
+          // Single value comparison
+          if (left.length === 1 && right.length === 1) {
+            const l = left[0];
+            const r = right[0];
+            
+            // Type checking
+            if (!areTypesComparable(l, r)) {
+              throw new Error("Cannot compare different types");
+            }
 
-          const l = left[0];
-          const r = right[0];
+            // Special handling for temporal values
+            if (
+              typeof l === "string" &&
+              typeof r === "string" &&
+              isTemporalValue(l) &&
+              isTemporalValue(r)
+            ) {
+              return [compareTemporalValues(l, r) < 0];
+            }
 
-          // Special handling for temporal values
-          if (
-            typeof l === "string" &&
-            typeof r === "string" &&
-            isTemporalValue(l) &&
-            isTemporalValue(r)
-          ) {
-            return [compareTemporalValues(l, r) < 0];
+            return [l < r];
           }
-
-          return [l < r];
+          
+          // Collection to single value comparison (element-wise)
+          if (left.length > 1 && right.length === 1) {
+            const r = right[0];
+            return left.map(l => {
+              if (!areTypesComparable(l, r)) {
+                throw new Error("Cannot compare different types");
+              }
+              if (typeof l === "string" && typeof r === "string" &&
+                  isTemporalValue(l) && isTemporalValue(r)) {
+                return compareTemporalValues(l, r) < 0;
+              }
+              return l < r;
+            });
+          }
+          
+          // Single value to collection comparison (element-wise)
+          if (left.length === 1 && right.length > 1) {
+            const l = left[0];
+            return right.map(r => {
+              if (!areTypesComparable(l, r)) {
+                throw new Error("Cannot compare different types");
+              }
+              if (typeof l === "string" && typeof r === "string" &&
+                  isTemporalValue(l) && isTemporalValue(r)) {
+                return compareTemporalValues(l, r) < 0;
+              }
+              return l < r;
+            });
+          }
+          
+          // Collection to collection - return empty
+          return [];
         };
         break;
 
@@ -408,42 +542,66 @@ export class FHIRPathCompiler {
           const left = compiledLeft.eval(context, data, ctx);
           const right = compiledRight.eval(context, data, ctx);
 
-          if (left.length !== 1 || right.length !== 1) return [];
-
-          const l = left[0];
-          const r = right[0];
-
-          // Handle quantity comparisons
-          if (
-            typeof l === "number" &&
-            typeof r === "object" &&
-            r !== null &&
-            "value" in r &&
-            "unit" in r
-          ) {
-            // Convert quantity to same unit if possible
-            if (r.unit === "years") {
-              const lInYears = l / 365.25; // Convert days to years
-              return [lInYears > r.value];
+          // Empty comparisons return empty
+          if (left.length === 0 || right.length === 0) return [];
+          
+          // Single value comparison
+          if (left.length === 1 && right.length === 1) {
+            const l = left[0];
+            const r = right[0];
+            
+            // Type checking
+            if (!areTypesComparable(l, r)) {
+              throw new Error("Cannot compare different types");
             }
-            if (r.unit === "days") {
-              return [l > r.value];
+
+            // Special handling for temporal values
+            if (
+              typeof l === "string" &&
+              typeof r === "string" &&
+              isTemporalValue(l) &&
+              isTemporalValue(r)
+            ) {
+              return [compareTemporalValues(l, r) > 0];
             }
-            // For other units, just compare values
-            return [l > r.value];
-          }
 
-          // Special handling for temporal values
-          if (
-            typeof l === "string" &&
-            typeof r === "string" &&
-            isTemporalValue(l) &&
-            isTemporalValue(r)
-          ) {
-            return [compareTemporalValues(l, r) > 0];
+            return [l > r];
           }
-
-          return [l > r];
+          
+          // Collection to single value comparison (element-wise)
+          if (left.length > 1 && right.length === 1) {
+            const r = right[0];
+            return left.map(l => {
+              if (!areTypesComparable(l, r)) {
+                throw new Error("Cannot compare different types");
+              }
+              
+              if (typeof l === "string" && typeof r === "string" &&
+                  isTemporalValue(l) && isTemporalValue(r)) {
+                return compareTemporalValues(l, r) > 0;
+              }
+              return l > r;
+            });
+          }
+          
+          // Single value to collection comparison (element-wise)
+          if (left.length === 1 && right.length > 1) {
+            const l = left[0];
+            return right.map(r => {
+              if (!areTypesComparable(l, r)) {
+                throw new Error("Cannot compare different types");
+              }
+              
+              if (typeof l === "string" && typeof r === "string" &&
+                  isTemporalValue(l) && isTemporalValue(r)) {
+                return compareTemporalValues(l, r) > 0;
+              }
+              return l > r;
+            });
+          }
+          
+          // Collection to collection - return empty
+          return [];
         };
         break;
 
@@ -511,11 +669,35 @@ export class FHIRPathCompiler {
           ctx: EvaluationContext,
         ): any[] {
           const left = compiledLeft.eval(context, data, ctx);
+          
+          // Three-valued logic: empty -> empty
           if (left.length === 0) return [];
-          if (left.length !== 1 || left[0] !== true) return left;
+          
+          // Error if more than one value
+          if (left.length > 1) throw new Error("Logical operators require single values");
+          
+          const leftVal = left[0];
+          if (typeof leftVal !== 'boolean') {
+            throw new Error("Logical operators require boolean operands");
+          }
+          
+          // Short-circuit: false and X = false
+          if (leftVal === false) return [false];
 
           const right = compiledRight.eval(context, data, ctx);
-          return right;
+          
+          // Three-valued logic: true and empty = empty
+          if (right.length === 0) return [];
+          
+          if (right.length > 1) throw new Error("Logical operators require single values");
+          
+          const rightVal = right[0];
+          if (typeof rightVal !== 'boolean') {
+            throw new Error("Logical operators require boolean operands");
+          }
+          
+          // true and X = X
+          return [rightVal];
         };
         break;
 
@@ -526,16 +708,38 @@ export class FHIRPathCompiler {
           ctx: EvaluationContext,
         ): any[] {
           const left = compiledLeft.eval(context, data, ctx);
+          
+          // Three-valued logic
           if (left.length === 0) {
-            return compiledRight.eval(context, data, ctx);
+            // empty or X = X (unless X is also empty)
+            const right = compiledRight.eval(context, data, ctx);
+            return right;
           }
-          if (left.length === 1 && left[0] === true) return [true];
+          
+          if (left.length > 1) throw new Error("Logical operators require single values");
+          
+          const leftVal = left[0];
+          if (typeof leftVal !== 'boolean') {
+            throw new Error("Logical operators require boolean operands");
+          }
+          
+          // Short-circuit: true or X = true
+          if (leftVal === true) return [true];
 
           const right = compiledRight.eval(context, data, ctx);
-          if (right.length === 0) return left;
-          if (right.length === 1 && right[0] === true) return [true];
-
-          return [false];
+          
+          // false or empty = empty
+          if (right.length === 0) return [];
+          
+          if (right.length > 1) throw new Error("Logical operators require single values");
+          
+          const rightVal = right[0];
+          if (typeof rightVal !== 'boolean') {
+            throw new Error("Logical operators require boolean operands");
+          }
+          
+          // false or X = X
+          return [rightVal];
         };
         break;
 
@@ -564,11 +768,16 @@ export class FHIRPathCompiler {
           const right = compiledRight.eval(context, data, ctx);
 
           if (left.length === 0 || right.length === 0) return [];
-          if (left.length !== 1 || right.length !== 1) return [];
+          if (left.length !== 1 || right.length !== 1) throw new Error("Logical operators require single values");
 
-          const lBool = left[0] === true;
-          const rBool = right[0] === true;
-          return [lBool !== rBool];
+          const leftVal = left[0];
+          const rightVal = right[0];
+          
+          if (typeof leftVal !== 'boolean' || typeof rightVal !== 'boolean') {
+            throw new Error("Logical operators require boolean operands");
+          }
+          
+          return [leftVal !== rightVal];
         };
         break;
 
@@ -1441,6 +1650,33 @@ export class FHIRPathCompiler {
             // For other types, just return the item itself
             return item;
           });
+        };
+        break;
+
+      case "not":
+        evalFn = function evalNot(
+          context: any[],
+          data: any,
+          ctx: EvaluationContext,
+        ): any[] {
+          // not() implements three-valued logic
+          if (context.length === 0) {
+            // empty -> empty
+            return [];
+          }
+          if (context.length > 1) {
+            // Multiple values -> error
+            throw new Error("not() requires a single boolean value");
+          }
+          const value = context[0];
+          if (value === true) {
+            return [false];
+          } else if (value === false) {
+            return [true];
+          } else {
+            // Non-boolean value -> error
+            throw new Error("not() requires a boolean value");
+          }
         };
         break;
 
