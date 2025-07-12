@@ -1,4 +1,4 @@
-# Task: Verify Spec Chapters
+# Task: Verify Spec Chapters [completed]
 
 ## Objective
 Verify that each chapter in `./docs/spec/` is compliant with the official FHIRPath specification and fix any discrepancies.

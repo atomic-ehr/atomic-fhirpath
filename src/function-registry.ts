@@ -23,6 +23,8 @@ import {
 } from './type-system';
 
 import { type FunctionSignature, type FunctionParameter } from './typed-nodes';
+import { type FHIRPathFunction, type RuntimeContext, builtInFunctions } from './functions';
+import type { FunctionCallNode } from './types';
 
 export interface FunctionTypeInference {
   (paramTypes: FHIRPathType[], contextType?: FHIRPathType): FHIRPathType;
@@ -37,9 +39,39 @@ export interface FunctionRegistryEntry {
 
 export class FunctionRegistry {
   private functions = new Map<string, FunctionRegistryEntry>();
+  private fhirpathFunctions = new Map<string, FHIRPathFunction>();
   
   constructor() {
+    // Register new-style functions first
+    this.registerFHIRPathFunctions();
+    // Then register legacy functions (will be migrated)
     this.registerBuiltInFunctions();
+  }
+  
+  /**
+   * Register new-style FHIRPath functions
+   */
+  private registerFHIRPathFunctions(): void {
+    for (const [name, func] of Array.from(builtInFunctions)) {
+      this.fhirpathFunctions.set(name, func);
+      // Create backward-compatible entry
+      this.functions.set(name, {
+        signature: func.signature,
+        inferReturnType: (paramTypes: FHIRPathType[], contextType?: FHIRPathType) => {
+          if (func.returnType) {
+            return func.returnType;
+          }
+          if (func.inferReturnType) {
+            // Adapt to new signature
+            const context: RuntimeContext = { focus: undefined };
+            return func.inferReturnType(context, contextType, paramTypes, {} as FunctionCallNode);
+          }
+          return ANY_TYPE;
+        },
+        category: func.category,
+        description: func.description
+      });
+    }
   }
   
   /**
@@ -50,10 +82,40 @@ export class FunctionRegistry {
   }
   
   /**
+   * Register a new-style FHIRPath function
+   */
+  registerFunction(func: FHIRPathFunction): void {
+    this.fhirpathFunctions.set(func.name, func);
+    // Create backward-compatible entry
+    this.register(func.name, {
+      signature: func.signature,
+      inferReturnType: (paramTypes: FHIRPathType[], contextType?: FHIRPathType) => {
+        if (func.returnType) {
+          return func.returnType;
+        }
+        if (func.inferReturnType) {
+          const context: RuntimeContext = { focus: undefined };
+          return func.inferReturnType(context, contextType, paramTypes, {} as FunctionCallNode);
+        }
+        return ANY_TYPE;
+      },
+      category: func.category,
+      description: func.description
+    });
+  }
+  
+  /**
    * Get function registry entry
    */
   get(name: string): FunctionRegistryEntry | undefined {
     return this.functions.get(name);
+  }
+  
+  /**
+   * Get new-style FHIRPath function
+   */
+  getFunction(name: string): FHIRPathFunction | undefined {
+    return this.fhirpathFunctions.get(name);
   }
   
   /**
@@ -439,7 +501,9 @@ export class FunctionRegistry {
     });
     
     // Math functions
-    this.register('abs', {
+    // Skip abs - already registered as new-style function
+    if (!this.has('abs')) {
+      this.register('abs', {
       signature: {
         name: 'abs',
         parameters: [],
@@ -458,6 +522,7 @@ export class FunctionRegistry {
       category: 'math',
       description: 'Absolute value'
     });
+    }
     
     this.register('ceiling', {
       signature: {

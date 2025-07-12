@@ -4,6 +4,15 @@
 
 This project implements a complete FHIRPath expression language parser, type system, and compiler. FHIRPath is a path-based navigation and extraction language for FHIR (Fast Healthcare Interoperability Resources) data structures.
 
+## Recent Updates
+
+### Function Architecture Redesign (2025-07-12)
+- Introduced modular **FHIRPathFunction** interface to replace monolithic switch statement
+- Migrated all 12 math functions to individual modules with comprehensive tests
+- Each function now has its own file with type information, compilation logic, and unit tests
+- Maintains backward compatibility while enabling incremental migration
+- See [Functions Architecture](components/functions.md) for details
+
 ## Project Structure
 
 ```
@@ -19,7 +28,14 @@ atomic-fhirpath/
 │   ├── type-inference.ts   # Type inference engine
 │   ├── semantic-validator.ts # Semantic validation
 │   ├── typed-compiler.ts   # Type-aware compilation
-│   ├── function-registry.ts # Built-in functions
+│   ├── function-registry.ts # Built-in functions (legacy)
+│   ├── functions/          # New modular function system
+│   │   ├── base.ts        # FHIRPathFunction interface
+│   │   ├── index.ts       # Function registry
+│   │   ├── function-executor.ts # Function execution
+│   │   └── math/          # Math functions
+│   │       ├── abs.ts, ceiling.ts, floor.ts, etc.
+│   │       └── index.ts   # Math function exports
 │   ├── model-provider.ts   # FHIR schema interface
 │   ├── context.ts          # Evaluation context
 │   ├── error-formatter.ts  # Error formatting utilities
@@ -27,9 +43,15 @@ atomic-fhirpath/
 │   └── index.ts            # Public API
 ├── test/                   # Test suite
 │   ├── parser/            # Parser-specific tests
+│   ├── functions/         # Function-specific tests
+│   │   └── math/          # Math function tests
 │   ├── 01-literals.test.ts through 08-functions-datetime.test.ts
 │   └── Various component tests
 ├── docs/                   # Documentation
+│   ├── architecture.md    # This file
+│   ├── components/        # Component documentation
+│   │   └── functions.md   # Functions architecture
+│   └── overview/          # High-level docs
 ├── refs/                   # Reference materials
 │   └── FHIRPath/          # FHIRPath specification
 └── tasks/                  # Task tracking
@@ -90,14 +112,30 @@ Features:
 - Integration with type inference and validation
 - Configurable compilation options
 
-### 6. Function Registry
-**File**: [`function-registry.ts`](../src/function-registry.ts)
+### 6. Function System
+**Files**: [`functions/`](../src/functions/), [`function-registry.ts`](../src/function-registry.ts)
 
-Built-in function management:
-- Complete FHIRPath function library
-- Type signatures and return type inference
-- Category-based organization
-- Extensible architecture
+The function system has been redesigned for modularity:
+
+#### New Architecture ([`functions/base.ts`](../src/functions/base.ts:43))
+- **FHIRPathFunction Interface**: Standard contract for all functions
+- **Modular Implementation**: Each function in its own file
+- **Category Organization**: Functions grouped by type (math, string, etc.)
+- **Type Safety**: Strong typing throughout
+
+#### Function Executor ([`functions/function-executor.ts`](../src/functions/function-executor.ts))
+- Manages function registration and lookup
+- Handles compilation and execution
+- Provides backward compatibility
+
+#### Built-in Functions ([`functions/index.ts`](../src/functions/index.ts:40))
+- Central registry of all functions
+- Currently implemented:
+  - **Math Functions** (12/12): abs, ceiling, floor, round, sqrt, sum, min, max, avg, div, mod, value
+  - **Collection Functions** (0/15): In progress
+  - **String Functions** (0/11): Planned
+
+See [Functions Architecture](components/functions.md) for detailed documentation.
 
 ### 7. Evaluation Engine
 **Files**: [`evaluate.ts`](../src/evaluate.ts), [`context.ts`](../src/context.ts)

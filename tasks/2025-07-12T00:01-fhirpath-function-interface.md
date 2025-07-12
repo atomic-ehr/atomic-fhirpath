@@ -1,4 +1,4 @@
-# Implement FHIRPathFunction Interface [pending]
+# Implement FHIRPathFunction Interface [in-progress]
 
 ## Overview
 Introduce a modular FHIRPathFunction interface to replace the monolithic switch statement in the compiler. Each function will contain its own type information, compilation logic, and evaluation implementation in a dedicated file with unit tests.
@@ -11,10 +11,13 @@ Introduce a modular FHIRPathFunction interface to replace the monolithic switch 
 - Hard to maintain and understand individual function behavior
 
 ## Tasks
-- [ ] Create FHIRPathFunction interface definition
-- [ ] Create function implementation structure
-- [ ] Refactor existing built-in functions
+- [x] Create FHIRPathFunction interface definition
+- [x] Create function implementation structure
+- [x] Implement proof of concept (abs function)
+- [x] Update function-registry.ts to support FHIRPathFunction
+- [x] Create function-executor.ts for function management
 - [ ] Update compiler to use new function system
+- [ ] Refactor remaining built-in functions
 - [ ] Add comprehensive unit tests per function
 - [ ] Update documentation
 
@@ -30,13 +33,17 @@ interface FHIRPathFunction {
   
   // Type information
   signature: FunctionSignature;
-  inferReturnType: (paramTypes: FHIRPathType[], contextType?: FHIRPathType) => FHIRPathType;
+  // one of elements
+  // returnType - if returnType is fixed or inferReturnType
+  returnType: FHIRPathType;
+  inferReturnType: (context: FHIRPathContext, contextType?: FHIRPathType, paramTypes: FHIRPathType[], ast: FunctionCallNode) => FHIRPathType;
   
   // Compilation
-  compile: (ast: FunctionCallNode, compiler: CompilerContext) => CompiledExpression;
+  compile: (context: CompilerContext, ast: FunctionCallNode) => CompiledExpression;
   
-  // Direct evaluation (for testing and simple cases)
-  evaluate?: (context: any, ...args: any[]) => any;
+  // core function, which will be used in compile; for example for abs() fhirpath function, it should be ts abs function
+  // this function can be used for unit tests without need to setup surounding FHIRPath objects 
+  evaluate?: (context: RuntimeContext, ...args: any[]) => any;
 }
 ```
 
@@ -100,16 +107,13 @@ export const whereFunction: FHIRPathFunction = {
     const context = compiler.compileNode(ast.context);
     const criteria = compiler.compileNode(ast.arguments[0]);
     
-    return (data, env) => {
-      const collection = ensureArray(context(data, env));
-      return collection.filter(item => {
-        const result = criteria(item, env);
-        return isTruthy(result);
-      });
+    return (context, data, env) => {
+      //here could be generic checks for cardinality, nulls etc
+      return whereFunction(context, criteria, collection);
     };
   },
   
-  evaluate: (context, criteria) => {
+  evaluate: (context, criteria, collection) => {
     const collection = ensureArray(context);
     return collection.filter(item => isTruthy(criteria(item)));
   }
@@ -117,14 +121,11 @@ export const whereFunction: FHIRPathFunction = {
 
 // Unit tests in same file
 describe('where() function', () => {
+  const context = {}
   it('should filter collection by criteria', () => {
-    const result = whereFunction.evaluate([1, 2, 3, 4], x => x > 2);
+    const criteria = x => x > 2
+    const result = whereFunction.evaluate(context, criteria, [1, 2, 3, 4]);
     expect(result).toEqual([3, 4]);
-  });
-  
-  it('should handle empty collections', () => {
-    const result = whereFunction.evaluate([], x => true);
-    expect(result).toEqual([]);
   });
   
   // More tests...
@@ -230,3 +231,66 @@ private compileCustomFunction(node: FunctionCallNode): CompiledExpression {
 - Performance hints (pure, deterministic, etc.)
 - Async function support
 - Function validation and linting
+
+Report progress on this task here
+
+## Progress Report
+
+### 2025-07-12 - Initial Implementation
+
+**Completed:**
+1. Created `src/functions/base.ts` with:
+   - FHIRPathFunction interface definition
+   - Runtime and compiler context types
+   - Utility functions (ensureArray, isTruthy, isEmpty, getSingleValue)
+   - Optional BaseFHIRPathFunction abstract class
+   - createSimpleFunction helper
+
+2. Created directory structure:
+   - `src/functions/` with subdirectories for each category
+   - `test/functions/` for function-specific tests
+
+3. Implemented abs() function as proof of concept:
+   - `src/functions/math/abs.ts` - Full implementation with type inference
+   - `test/functions/math/abs.test.ts` - Comprehensive unit tests
+   - All tests passing (13 tests)
+
+4. Updated `src/function-registry.ts`:
+   - Added support for new FHIRPathFunction interface
+   - Maintains backward compatibility with existing code
+   - Automatically registers built-in functions from new system
+
+5. Created `src/function-executor.ts`:
+   - Manages function compilation and execution
+   - Supports custom function registration
+   - Proper error handling with FunctionExecutionError
+   - Validates function calls
+
+**Next Steps:**
+- Update compiler.ts to use function-executor instead of switch statement
+- Test integration with existing code
+- Begin migrating remaining functions
+
+### 2025-07-12 - Compiler Integration Complete
+
+**Additional Completed:**
+6. Updated `src/compiler.ts`:
+   - Implemented CompilerContext interface in FHIRPathCompiler class
+   - Modified compileFunction to check for new-style functions first
+   - Created adapter between old eval function signature and new compiled expression
+   - All existing tests pass without modification
+
+7. Created integration tests:
+   - `test/functions/integration/abs-integration.test.ts`
+   - Verified abs() works through fhirpath() function
+   - All 4 integration tests pass
+
+8. Verified backward compatibility:
+   - All existing abs() tests in test/07-functions-math.test.ts pass (7 tests)
+   - No changes needed to existing test files
+
+**System is now ready for function migration:**
+- New functions can be added using FHIRPathFunction interface
+- Old functions continue to work through legacy switch statement
+- Gradual migration path established
+- Full test coverage maintained

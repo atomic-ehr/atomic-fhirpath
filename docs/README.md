@@ -20,7 +20,9 @@ Welcome to the FHIRPath implementation documentation. This parser provides a com
 - **[Type System](components/type-system.md)** - FHIRPath type hierarchy
 - **[Type Inference](components/type-inference.md)** - Context-aware type resolution
 - **[Semantic Validator](components/semantic-validator.md)** - Expression validation
-- **[Function Registry](components/function-registry.md)** - Built-in function library
+- **[Functions Architecture](components/functions.md)** - New modular function system
+- **[Math Functions](components/math-functions.md)** - All mathematical operations
+- **[Function Registry](components/function-registry.md)** - Built-in function library (legacy)
 - **[Evaluator](components/evaluator.md)** - Runtime expression evaluation
 
 ### 📖 Guides
@@ -33,6 +35,7 @@ Welcome to the FHIRPath implementation documentation. This parser provides a com
 
 ### 🧠 For AI Assistants
 - **[Quick Reference](memory/quick-reference.md)** - Common patterns and file locations
+- **[Function Locations](memory/function-locations.md)** - Where to find function implementations
 - **[CLAUDE.md](../CLAUDE.md)** - Instructions for AI assistants
 
 ### 📖 Specification

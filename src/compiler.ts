@@ -16,6 +16,9 @@ import type {
 
 import { TokenType } from "./types";
 
+import { functionExecutor } from "./function-executor";
+import type { CompilerContext, CompiledExpression } from "./functions/base";
+
 import type {
   CompiledNode,
   CompiledLiteralNode,
@@ -57,7 +60,44 @@ function areTypesComparable(left: any, right: any): boolean {
  * Each compiled node preserves the original AST structure while
  * adding an eval function that implements FHIRPath semantics.
  */
-export class FHIRPathCompiler {
+export class FHIRPathCompiler implements CompilerContext {
+  private variableScope = new Map<string, any>();
+  private inCollectionContext = false;
+  
+  /**
+   * CompilerContext implementation - compile a node
+   */
+  compileNode(node: ASTNode): CompiledExpression {
+    const compiled = this.compile(node);
+    return (data: any, env: EvaluationContext) => {
+      // Call the eval function with proper context
+      // FHIRPath functions expect context as array
+      const context = Array.isArray(data) ? data : [data];
+      return compiled.eval(context, data, env);
+    };
+  }
+  
+  /**
+   * CompilerContext implementation - get variable scope
+   */
+  getVariableScope(): Map<string, any> {
+    return this.variableScope;
+  }
+  
+  /**
+   * CompilerContext implementation - check collection context
+   */
+  isCollectionContext(): boolean {
+    return this.inCollectionContext;
+  }
+  
+  /**
+   * CompilerContext implementation - report error
+   */
+  reportError(message: string, node: ASTNode): void {
+    throw new Error(`${message} at position ${node.start}-${node.end}`);
+  }
+  
   /**
    * Compile an AST node into a CompiledNode with eval function
    */
@@ -948,7 +988,28 @@ export class FHIRPathCompiler {
   }
 
   private compileFunction(node: FunctionCallNode): CompiledFunctionCallNode {
-    // Compile all arguments
+    // Check if this is a new-style function first
+    const newStyleFunc = functionExecutor.getFunction(node.name);
+    if (newStyleFunc) {
+      // Use the new function executor
+      const compiledExpr = functionExecutor.compileFunction(this, node);
+      
+      // Create eval function that adapts between the two systems
+      const evalFn: EvalFunction = (context: any[], data: any, ctx: EvaluationContext): any[] => {
+        // The new system expects the context array as the data parameter
+        const result = compiledExpr(context, ctx);
+        // Ensure result is always an array
+        return Array.isArray(result) ? result : result === null || result === undefined ? [] : [result];
+      };
+      
+      return {
+        ...node,
+        args: node.args.map((arg) => this.compile(arg)),
+        eval: evalFn,
+      };
+    }
+    
+    // Compile all arguments for legacy functions
     const compiledArgs = node.args.map((arg) => this.compile(arg));
 
     // Create eval function based on function name
