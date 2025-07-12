@@ -25,10 +25,10 @@ The FHIRPath parser is a high-performance, two-stage language processor that con
 ```
 
 ### Component Files
-- **`src/parser.ts`** - Main parser implementation with Pratt parsing
-- **`src/tokenizer.ts`** - Lexical analysis with character dispatch tables
-- **`src/types.ts`** - AST node type definitions
-- **`src/index.ts`** - Public API and expression cache
+- **[`src/parser.ts`](../../src/parser.ts)** - Main parser implementation with Pratt parsing
+- **[`src/tokenizer.ts`](../../src/tokenizer.ts)** - Lexical analysis with character dispatch tables
+- **[`src/types.ts`](../../src/types.ts)** - AST node type definitions
+- **[`src/index.ts`](../../src/index.ts)** - Public API and expression cache
 
 ## API Reference
 
@@ -42,6 +42,11 @@ parse(expression: string, useCache: boolean = true): ASTNode
 const parser = new Parser();
 const ast = parser.parse(expression);
 ```
+
+**Key entry points:**
+- [`parse()` function](../../src/parser.ts#L113) - Main public API
+- [`Parser` class](../../src/parser.ts#L150) - Parser implementation
+- [`Tokenizer` class](../../src/tokenizer.ts#L157) - Lexical analysis
 
 ### AST Node Types
 

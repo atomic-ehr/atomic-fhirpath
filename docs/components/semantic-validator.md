@@ -4,7 +4,7 @@
 Validates FHIRPath expressions for semantic correctness beyond syntax, checking type compatibility and proper usage.
 
 ## Files
-- `src/semantic-validator.ts` - Validation implementation
+- [`src/semantic-validator.ts`](../../src/semantic-validator.ts) - Validation implementation
 
 ## Validation Rules
 
@@ -54,6 +54,11 @@ interface ValidationResult {
   isValid: boolean;
 }
 ```
+
+**Key entry points:**
+- [`SemanticValidator` class](../../src/semantic-validator.ts#L209) - Main validator
+- [`validateExpression()` function](../../src/index.ts#L71) - Public API
+- [`ValidationResult` interface](../../src/semantic-validator.ts#L3) - Result structure
 
 ## Testing
 - `test/semantic-validator.test.ts` - Validation tests

@@ -76,6 +76,10 @@ interface CompilationResult {
 }
 ```
 
+**Key entry points:**
+- [`compileWithTypes()` function](../../src/typed-compiler.ts#L154) - Type-aware compilation
+- [`TypedCompiler` class](../../src/typed-compiler.ts#L26) - Orchestrates compilation pipeline
+
 ## Type System
 
 ### Primitive Types

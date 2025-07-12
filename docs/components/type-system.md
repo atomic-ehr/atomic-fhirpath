@@ -4,8 +4,8 @@
 Complete FHIRPath type hierarchy implementation with cardinality constraints and compatibility rules.
 
 ## Files
-- `src/type-system.ts` - Core type definitions and utilities
-- `src/typed-nodes.ts` - Enhanced AST nodes with type information
+- [`src/type-system.ts`](../../src/type-system.ts) - Core type definitions and utilities
+- [`src/typed-nodes.ts`](../../src/typed-nodes.ts) - Enhanced AST nodes with type information
 
 ## Type Hierarchy
 
@@ -50,6 +50,13 @@ interface FHIRPathType {
   readonly isResource: boolean;
 }
 ```
+
+**Key entry points:**
+- [`FHIRPathType` base class](../../src/type-system.ts#L45) - Type base class
+- [`PrimitiveType` class](../../src/type-system.ts#L144) - Primitive types
+- [`ResourceType` class](../../src/type-system.ts#L172) - Resource types
+- [`CollectionType` class](../../src/type-system.ts#L209) - Collection types
+- [`createResourceType()` function](../../src/type-system.ts#L238) - Type factory
 
 ## Testing
 - `test/type-system.test.ts` - Type system unit tests

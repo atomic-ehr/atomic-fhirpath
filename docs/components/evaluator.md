@@ -4,8 +4,8 @@
 Runtime evaluation engine that executes compiled FHIRPath expressions against data.
 
 ## Files
-- `src/evaluate.ts` - Expression evaluation
-- `src/context.ts` - Evaluation context management
+- [`src/evaluate.ts`](../../src/evaluate.ts) - Expression evaluation
+- [`src/context.ts`](../../src/context.ts) - Evaluation context management
 
 ## Evaluation Process
 
@@ -30,6 +30,11 @@ interface EvaluationContext {
   rootData: any;
 }
 ```
+
+**Key entry points:**
+- [`EvaluationContext` interface](../../src/context.ts#L3) - Context structure
+- [`fhirpath()` function](../../src/index.ts#L48) - Main evaluation API
+- [`evaluate()` function](../../src/evaluate.ts#L5) - Direct evaluation
 
 ## Key Features
 - Collection handling

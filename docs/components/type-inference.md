@@ -4,8 +4,8 @@
 Context-sensitive type resolution engine that infers types throughout FHIRPath expression trees.
 
 ## Files
-- `src/type-inference.ts` - Type inference engine
-- `src/model-provider.ts` - FHIR schema interface
+- [`src/type-inference.ts`](../../src/type-inference.ts) - Type inference engine
+- [`src/model-provider.ts`](../../src/model-provider.ts) - FHIR schema interface
 
 ## Algorithm
 - Visitor pattern traversal
@@ -37,6 +37,11 @@ interface ModelProvider {
   isSubTypeOf(childType: string, parentType: string): boolean;
 }
 ```
+
+**Key entry points:**
+- [`inferTypes()` function](../../src/type-inference.ts#L57) - Main type inference API
+- [`TypeInferenceVisitor` class](../../src/type-inference.ts#L108) - Visitor implementation
+- [`ModelProvider` interface](../../src/model-provider.ts#L3) - Schema plugin interface
 
 ## Type Inference Process
 1. Start with root context type

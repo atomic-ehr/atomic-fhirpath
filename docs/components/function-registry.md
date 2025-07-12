@@ -4,7 +4,7 @@
 Manages built-in FHIRPath functions with type signatures and implementations.
 
 ## Files
-- `src/function-registry.ts` - Function definitions and registry
+- [`src/function-registry.ts`](../../src/function-registry.ts) - Function definitions and registry
 
 ## Function Categories
 
@@ -80,6 +80,11 @@ interface FunctionSignature {
   maxArity: number;
 }
 ```
+
+**Key entry points:**
+- [`FunctionRegistry` class](../../src/function-registry.ts#L36) - Main registry implementation
+- [`createFunctionRegistry()`](../../src/function-registry.ts#L1486) - Create default registry
+- [`FunctionSignature` interface](../../src/function-registry.ts#L7) - Function metadata
 
 ## Testing
 - `test/function-registry.test.ts` - Function registry tests
