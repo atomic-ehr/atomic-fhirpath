@@ -189,3 +189,12 @@ Minimal external dependencies:
 - Core TypeScript/JavaScript only
 - No runtime dependencies
 - Development dependencies for testing (Bun test framework)
+
+## Related Documentation
+
+- [FHIRPath Spec Reference](./spec/index.md) - Concise specification chapters
+- [Parser Documentation](./components/parser.md) - Detailed parser implementation
+- [Compiler Documentation](./components/compiler.md) - Compiler and evaluation details
+- [Type System Documentation](./components/type-system.md) - Type hierarchy and inference
+- [Feature Support Matrix](./overview/fhirpath-support.md) - What's implemented
+- [Performance Guide](./overview/performance.md) - Performance characteristics

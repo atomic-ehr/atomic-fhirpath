@@ -35,8 +35,11 @@ Welcome to the FHIRPath implementation documentation. This parser provides a com
 - **[Quick Reference](memory/quick-reference.md)** - Common patterns and file locations
 - **[CLAUDE.md](../CLAUDE.md)** - Instructions for AI assistants
 
+### 📖 Specification
+- **[FHIRPath Spec Reference](spec/index.md)** - Concise specification chapters
+- **[Full Specification](../refs/FHIRPath/spec/2019May/index.adoc)** - Complete official spec
+
 ### 🔗 External Resources
-- **[FHIRPath Specification](../refs/FHIRPath/spec/2019May/index.adoc)** - Official FHIRPath spec
 - **[FHIR Documentation](https://www.hl7.org/fhir/)** - FHIR standard documentation
 - **[GitHub Repository](https://github.com/atomic-ehr/atomic-fhirpath)** - Source code
 

@@ -37,6 +37,7 @@ docs/
 2. **Check fhirpath-support.md** - See what features are already implemented
 3. **Read component docs** - Detailed information about specific components
 4. **Update docs when making changes** - Keep documentation in sync with code
+5. **Reference FHIRPath spec** - Concise spec reference at `./docs/spec/` (full spec at `./refs/FHIRPath/spec/2019May/index.adoc`)
 
 * Use: bun mcp and lsp mcp
 * Use ./docs folder as your memory bank - read project overview when needed, update it if you are making changes

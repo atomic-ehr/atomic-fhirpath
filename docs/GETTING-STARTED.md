@@ -178,6 +178,7 @@ See [FHIRPath Support](overview/fhirpath-support.md) for complete feature list.
 
 ## Resources
 
-- [FHIRPath Specification](http://hl7.org/fhirpath/)
+- [FHIRPath Spec Reference](spec/index.md) - Concise specification guide
+- [FHIRPath Official Specification](http://hl7.org/fhirpath/)
 - [FHIR Documentation](https://www.hl7.org/fhir/)
 - [GitHub Repository](https://github.com/atomic-ehr/atomic-fhirpath)

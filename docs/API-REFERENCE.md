@@ -356,6 +356,7 @@ setExpressionCacheSize(500);
 ## See Also
 
 - [Getting Started](GETTING-STARTED.md) - Quick start guide
+- [FHIRPath Spec Reference](spec/index.md) - Concise specification reference
 - [Type System](components/type-system.md) - Type system details
 - [Parser](components/parser.md) - Parser internals
 - [Compiler](components/compiler.md) - Compiler architecture
