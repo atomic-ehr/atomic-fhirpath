@@ -42,7 +42,7 @@ FHIRPath allows navigation through the tree by composing a path of concatenated 
 name.given
 ```
 
-This would result in a collection of nodes containing all given names. In fact, each step in such a path results in a collection of nodes by selecting nodes with the given label from the step before it. The input collection at the beginning of the evaluation contained all elements from Patient, and the path `name` selected just those named `name`. Since the `name` element repeats, the next step `given` along the path, will contain all nodes labeled `given` from all nodes `name` in the preceding step.
+This would result in a collection of nodes, for example one with the value 'Wouter' and one with the value 'Gert'. In fact, each step in such a path results in a collection of nodes by selecting nodes with the given label from the step before it. The input collection at the beginning of the evaluation contained all elements from Patient, and the path `name` selected just those named `name`. Since the `name` element repeats, the next step `given` along the path, will contain all nodes labeled `given` from all nodes `name` in the preceding step.
 
 ### Type Prefixes
 
@@ -87,7 +87,7 @@ take(n)     // Take first n items
 [n]         // Item at index n
 ```
 
-## Paths and Polymorphic Items
+## Paths and polymorphic items
 
 In the underlying representation of data, nodes may be typed and represent polymorphic items. Paths may either ignore the type of a node, and continue along the path or may be explicit about the expected node and filter the set of nodes by type before navigating down child nodes:
 

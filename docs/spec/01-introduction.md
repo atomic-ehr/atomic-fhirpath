@@ -4,6 +4,8 @@
 
 FHIRPath is a path based navigation and extraction language, somewhat like XPath. Operations are expressed in terms of the logical content of hierarchical data models, and support traversal, selection and filtering of data. Its design was influenced by the needs for path navigation, selection and formulation of invariants in both HL7 Fast Healthcare Interoperability Resources (FHIR) and HL7 Clinical Quality Language (CQL).
 
+Looking for implementations? See [FHIRPath Implementations on the HL7 wiki](http://wiki.hl7.org/index.php?title=FHIRPath_Implementations)
+
 **Version**: 1.3.0 (3rd Normative Ballot)  
 **License**: Public Domain (Creative Commons 0)
 
@@ -19,10 +21,11 @@ Of particular importance is the ability to easily and precisely express conditio
 - Decision support (e.g., "if the patient has diabetes and has not had a recent comprehensive foot exam")
 - Cohort definitions (e.g., "All male patients aged 60-75")
 - Protocol descriptions (e.g., "if the specimen has tested positive for the presence of sodium")
+- And numerous other environments
 
 Precisely because the need for such expressions is so pervasive, there is no shortage of existing languages for representing them. However, these languages tend to be tightly coupled to the data structures, and even the information models on which they operate, XPath being a typical example. To ensure that the knowledge captured by the representation of these expressions can survive technological drift, a representation that can be used independent of any underlying physical implementation is required.
 
-Languages meeting these additional requirements also exist, such as OCL, Java, JavaScript, C#, and others. However, these languages are both tightly coupled to the platforms in which they operate, and, because they are general-purpose development languages, come with much heavier tooling and technology dependencies than is warranted or desirable.
+Languages meeting these additional requirements also exist, such as OCL, Java, JavaScript, C#, and others. However, these languages are both tightly coupled to the platforms in which they operate, and, because they are general-purpose development languages, come with much heavier tooling and technology dependencies than is warranted or desirable. Even constraining one of these grammars would be insufficient, resulting in the need to extend, defeating the purpose of basing it on an existing language in the first place.
 
 Given these constraints, and the lack of a specific language that meets all of these requirements, there is a need for a simple, lightweight, platform- and structure-independent graph traversal language. FHIRPath meets these requirements, and can be used within various environments to provide for simple but effective formal representation of expressions.
 
@@ -49,7 +52,7 @@ In both FHIR and CQL, the model independence of FHIRPath means that expressions 
 
 The expressions can in theory be converted to equivalent expressions in XPath, OCL, or another similarly expressive language.
 
-FHIRPath can be used against many other graphs as well. For example, Appendix B describes how FHIRPath is used in HL7 V2.
+FHIRPath can be used against many other graphs as well. For example, the appendices describe how FHIRPath is used in HL7 V2.
 
 ## Conventions
 

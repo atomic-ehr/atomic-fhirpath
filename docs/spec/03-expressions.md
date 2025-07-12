@@ -19,7 +19,7 @@ Time: @T14:34:28 (@ followed by ISO8601 compliant time beginning with T, no time
 Quantity: 10 'mg', 4 days
 ```
 
-For each type of literal, FHIRPath defines a named system type to allow operations and functions to be defined. For example, the multiplication operator (`*`) is defined for the numeric types Integer and Decimal, as well as the Quantity type.
+For each type of literal, FHIRPath defines a named system type to allow operations and functions to be defined. For example, the multiplication operator (`*`) is defined for the numeric types Integer and Decimal, as well as the Quantity type. See the discussion on Models for a more detailed discussion of how these types are used within evaluation contexts.
 
 ### Boolean
 
@@ -220,7 +220,7 @@ For operator or function arguments that expect collections, in general the empty
 
 When functions or operators behave differently from these general principles (for example the `count()` and `empty()` functions), this is clearly documented in the next sections.
 
-## Singleton Evaluation of Collections
+### Singleton Evaluation of Collections
 
 In general, when a collection is passed as an argument to a function or operator that expects a single item as input, the collection is implicitly converted to a singleton as follows:
 
