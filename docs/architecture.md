@@ -39,7 +39,7 @@ atomic-fhirpath/
 ## Core Components
 
 ### 1. Parser & Tokenizer
-**Files**: `parser.ts`, `tokenizer.ts`, `types.ts`
+**Files**: [`parser.ts`](../src/parser.ts), [`tokenizer.ts`](../src/tokenizer.ts), [`types.ts`](../src/types.ts)
 
 The parser implements a high-performance two-stage parsing approach:
 - **Tokenizer**: Character-based lexical analysis with optimized dispatch
@@ -52,7 +52,7 @@ Key features:
 - Support for all FHIRPath operators and constructs
 
 ### 2. Type System
-**Files**: `type-system.ts`, `typed-nodes.ts`
+**Files**: [`type-system.ts`](../src/type-system.ts), [`typed-nodes.ts`](../src/typed-nodes.ts)
 
 Complete FHIRPath type hierarchy implementation:
 - Primitive types: string, integer, decimal, boolean, date, time, dateTime, quantity
@@ -61,7 +61,7 @@ Complete FHIRPath type hierarchy implementation:
 - Type compatibility and coercion rules
 
 ### 3. Type Inference Engine
-**Files**: `type-inference.ts`, `model-provider.ts`
+**Files**: [`type-inference.ts`](../src/type-inference.ts), [`model-provider.ts`](../src/model-provider.ts)
 
 Context-sensitive type resolution:
 - Visitor pattern implementation
@@ -70,7 +70,7 @@ Context-sensitive type resolution:
 - Variable scope management
 
 ### 4. Semantic Validator
-**File**: `semantic-validator.ts`
+**File**: [`semantic-validator.ts`](../src/semantic-validator.ts)
 
 Comprehensive expression validation:
 - Type compatibility checking
@@ -79,7 +79,7 @@ Comprehensive expression validation:
 - Error/warning/info categorization
 
 ### 5. Compiler
-**Files**: `compiler.ts`, `typed-compiler.ts`, `compiler-types.ts`
+**Files**: [`compiler.ts`](../src/compiler.ts), [`typed-compiler.ts`](../src/typed-compiler.ts), [`compiler-types.ts`](../src/compiler-types.ts)
 
 Two compilation approaches:
 - **Basic Compiler**: Direct AST to executable code
@@ -91,7 +91,7 @@ Features:
 - Configurable compilation options
 
 ### 6. Function Registry
-**File**: `function-registry.ts`
+**File**: [`function-registry.ts`](../src/function-registry.ts)
 
 Built-in function management:
 - Complete FHIRPath function library
@@ -100,13 +100,20 @@ Built-in function management:
 - Extensible architecture
 
 ### 7. Evaluation Engine
-**Files**: `evaluate.ts`, `context.ts`
+**Files**: [`evaluate.ts`](../src/evaluate.ts), [`context.ts`](../src/context.ts)
 
 Runtime expression evaluation:
 - Context-based execution
 - Variable resolution
 - Function dispatch
 - Result aggregation
+
+### 8. Utilities
+**Files**: [`error-formatter.ts`](../src/error-formatter.ts), [`ast-printer.ts`](../src/ast-printer.ts)
+
+Support utilities:
+- **Error Formatter**: User-friendly error messages with context
+- **AST Printer**: Debug visualization of parsed expressions
 
 ## Key Interfaces
 
@@ -128,11 +135,12 @@ Source → Tokenizer → Parser → Type Inference → Validation → Code Gener
 ```
 
 ### Public API
-Main entry points in `index.ts`:
+Main entry points in [`index.ts`](../src/index.ts):
 - `parse(expression: string)`: Parse to AST
 - `compile(expression: string)`: Basic compilation
 - `compileWithTypes(expression: string, options?)`: Type-aware compilation
 - `validateExpression(expression: string, context?)`: Validation only
+- `fhirpath(data: any, expression: string, environment?: any)`: Evaluate expression
 
 ## Implementation Status
 
@@ -189,6 +197,25 @@ Minimal external dependencies:
 - Core TypeScript/JavaScript only
 - No runtime dependencies
 - Development dependencies for testing (Bun test framework)
+
+## Key Code Locations
+
+### Entry Points
+- **Main API**: [`src/index.ts`](../src/index.ts) - Public interface
+- **Parser Entry**: [`src/parser.ts:113`](../src/parser.ts) - `parse()` function
+- **Compiler Entry**: [`src/compiler.ts:2650`](../src/compiler.ts) - `compile()` function
+- **Type Inference**: [`src/type-inference.ts:57`](../src/type-inference.ts) - `inferTypes()` function
+
+### Core Algorithms
+- **Pratt Parser**: [`src/parser.ts:234`](../src/parser.ts) - `parseBinaryExpression()`
+- **Tokenizer Dispatch**: [`src/tokenizer.ts:157`](../src/tokenizer.ts) - Character dispatch table
+- **Type Visitor**: [`src/type-inference.ts:108`](../src/type-inference.ts) - `TypeInferenceVisitor` class
+- **Semantic Validation**: [`src/semantic-validator.ts:209`](../src/semantic-validator.ts) - `SemanticValidator` class
+
+### Important Data Structures
+- **AST Node Types**: [`src/types.ts`](../src/types.ts) - All node type definitions
+- **Type Hierarchy**: [`src/type-system.ts:45`](../src/type-system.ts) - Type class definitions
+- **Function Signatures**: [`src/function-registry.ts:36`](../src/function-registry.ts) - Function metadata
 
 ## Related Documentation
 
